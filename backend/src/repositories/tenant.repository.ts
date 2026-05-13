@@ -1,4 +1,4 @@
-import type { Prisma } from "@prisma/client";
+import { LeaseStatus, type Prisma } from "@prisma/client";
 import { prisma } from "../config/prisma";
 
 const userSafeSelect = {
@@ -10,14 +10,20 @@ const userSafeSelect = {
   createdAt: true,
 } as const;
 
+const listInclude = {
+  user: { select: userSafeSelect },
+  leases: {
+    where: { status: LeaseStatus.ACTIVE },
+    take: 1,
+    include: { unit: { include: { property: true } } },
+  },
+} as const;
+
 const detailInclude = {
   user: { select: userSafeSelect },
   leases: {
-    where: { endDate: null },
-    take: 1,
-    include: {
-      unit: { include: { property: true } },
-    },
+    orderBy: [{ createdAt: "desc" }] as Prisma.LeaseOrderByWithRelationInput[],
+    include: { unit: { include: { property: true } } },
   },
 } as const;
 
@@ -37,7 +43,7 @@ export const tenantRepository = {
     return prisma.tenant.findMany({
       where,
       orderBy: { createdAt: "desc" },
-      include: detailInclude,
+      include: listInclude,
     });
   },
 

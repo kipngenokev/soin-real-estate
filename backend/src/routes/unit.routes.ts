@@ -9,6 +9,7 @@ const router = Router();
 
 router.use(requireAuth, requireRole(Role.ADMIN));
 
+router.get("/", asyncHandler(unitController.list));
 router.get("/:id", asyncHandler(unitController.get));
 router.put("/:id", asyncHandler(unitController.update));
 router.patch("/:id/status", asyncHandler(unitController.setStatus));

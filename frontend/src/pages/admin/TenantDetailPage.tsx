@@ -6,6 +6,7 @@ import type { Tenant } from "../../lib/types";
 import { TenantFormModal } from "../../components/tenants/TenantFormModal";
 import { AssignLeaseModal } from "../../components/tenants/AssignLeaseModal";
 import { ConfirmDialog } from "../../components/ui/ConfirmDialog";
+import { LeaseStatusBadge } from "../../components/leases/LeaseStatusBadge";
 
 export function TenantDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -79,7 +80,9 @@ export function TenantDetailPage() {
     return <div className="text-sm text-red-600">Invalid tenant id.</div>;
   }
 
-  const lease = tenant?.leases?.[0];
+  const allLeases = tenant?.leases ?? [];
+  const lease = allLeases.find((l) => l.status === "ACTIVE") ?? null;
+  const history = allLeases.filter((l) => l.status !== "ACTIVE");
 
   return (
     <div className="space-y-6">
@@ -154,12 +157,22 @@ export function TenantDetailPage() {
               <dl className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
                 <Row label="Property">{lease.unit?.property?.name ?? "—"}</Row>
                 <Row label="Unit">{lease.unit?.label ?? "—"}</Row>
-                <Row label="Started">{new Date(lease.startDate).toLocaleDateString()}</Row>
+                <Row label="Started">
+                  {lease.startDate ? new Date(lease.startDate).toLocaleDateString() : "—"}
+                </Row>
                 <Row label="Monthly rent">
                   {Number(lease.monthlyRent).toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}
+                </Row>
+                <Row label="Lease">
+                  <Link
+                    to={`/admin/leases/${lease.id}`}
+                    className="text-slate-900 hover:underline"
+                  >
+                    #{lease.id}
+                  </Link>
                 </Row>
               </dl>
             ) : (
@@ -168,6 +181,51 @@ export function TenantDetailPage() {
               </p>
             )}
           </div>
+
+          {history.length > 0 && (
+            <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
+              <h3 className="text-lg font-semibold text-gray-900">Lease history</h3>
+              <div className="mt-3 overflow-hidden rounded-md border border-gray-200">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
+                    <tr>
+                      <th className="px-4 py-2 text-left font-medium">Lease</th>
+                      <th className="px-4 py-2 text-left font-medium">Unit</th>
+                      <th className="px-4 py-2 text-left font-medium">Status</th>
+                      <th className="px-4 py-2 text-left font-medium">Started</th>
+                      <th className="px-4 py-2 text-left font-medium">Ended</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100 bg-white text-sm">
+                    {history.map((h) => (
+                      <tr key={h.id} className="hover:bg-gray-50">
+                        <td className="px-4 py-2">
+                          <Link
+                            to={`/admin/leases/${h.id}`}
+                            className="text-slate-900 hover:underline"
+                          >
+                            #{h.id}
+                          </Link>
+                        </td>
+                        <td className="px-4 py-2 text-gray-700">
+                          {h.unit?.property?.name ?? "—"} · {h.unit?.label ?? "—"}
+                        </td>
+                        <td className="px-4 py-2">
+                          <LeaseStatusBadge status={h.status} />
+                        </td>
+                        <td className="px-4 py-2 text-gray-500">
+                          {h.startDate ? new Date(h.startDate).toLocaleDateString() : "—"}
+                        </td>
+                        <td className="px-4 py-2 text-gray-500">
+                          {h.endDate ? new Date(h.endDate).toLocaleDateString() : "—"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </>
       ) : null}
 

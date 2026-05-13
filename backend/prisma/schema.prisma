@@ -22,6 +22,12 @@ enum UnitStatus {
   OCCUPIED
 }
 
+enum LeaseStatus {
+  DRAFT
+  ACTIVE
+  ENDED
+}
+
 model User {
   id           Int      @id @default(autoincrement())
   email        String   @unique
@@ -80,19 +86,20 @@ model Tenant {
 }
 
 model Lease {
-  id          Int       @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   tenantId    Int
   unitId      Int
-  startDate   DateTime  @default(now())
+  status      LeaseStatus @default(DRAFT)
+  startDate   DateTime?
   endDate     DateTime?
-  monthlyRent Decimal   @db.Decimal(12, 2)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  monthlyRent Decimal     @db.Decimal(12, 2)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 
   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   unit   Unit   @relation(fields: [unitId], references: [id], onDelete: Cascade)
 
   @@index([tenantId])
   @@index([unitId])
-  @@index([endDate])
+  @@index([status])
 }

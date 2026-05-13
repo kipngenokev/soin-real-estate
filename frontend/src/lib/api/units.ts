@@ -1,5 +1,5 @@
 import { api } from "../api";
-import type { ApiEnvelope, Unit, UnitStatus, UnitType } from "../types";
+import type { ApiEnvelope, Unit, UnitStatus, UnitType, UnitWithProperty } from "../types";
 
 export type UnitInput = {
   label: string;
@@ -9,6 +9,13 @@ export type UnitInput = {
 };
 
 export const unitsApi = {
+  async listAll(filter: { status?: UnitStatus } = {}): Promise<UnitWithProperty[]> {
+    const { data } = await api.get<ApiEnvelope<UnitWithProperty[]>>("/units", {
+      params: filter,
+    });
+    return data.data;
+  },
+
   async listForProperty(propertyId: number): Promise<Unit[]> {
     const { data } = await api.get<ApiEnvelope<Unit[]>>(`/properties/${propertyId}/units`);
     return data.data;

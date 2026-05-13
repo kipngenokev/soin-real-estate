@@ -10,6 +10,12 @@ function parseId(value: string, label = "id"): number {
 }
 
 export const unitController = {
+  async list(req: Request, res: Response) {
+    const status = typeof req.query.status === "string" ? req.query.status : undefined;
+    const items = await unitService.list({ status });
+    res.status(200).json(ApiResponse.success(items));
+  },
+
   async listForProperty(req: Request, res: Response) {
     const propertyId = parseId(req.params.propertyId, "propertyId");
     const items = await unitService.listForProperty(propertyId);

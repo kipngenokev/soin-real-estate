@@ -4,6 +4,7 @@ import authRoutes from "./auth.routes";
 import propertyRoutes from "./property.routes";
 import unitRoutes from "./unit.routes";
 import tenantRoutes from "./tenant.routes";
+import leaseRoutes from "./lease.routes";
 
 const router = Router();
 
@@ -15,5 +16,6 @@ router.use("/auth", authRoutes);
 router.use("/properties", propertyRoutes);
 router.use("/units", unitRoutes);
 router.use("/tenants", tenantRoutes);
+router.use("/leases", leaseRoutes);
 
 export default router;

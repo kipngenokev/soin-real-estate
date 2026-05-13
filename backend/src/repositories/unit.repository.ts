@@ -2,6 +2,16 @@ import type { Prisma, Unit, UnitStatus } from "@prisma/client";
 import { prisma } from "../config/prisma";
 
 export const unitRepository = {
+  findAll(filter: { status?: UnitStatus } = {}) {
+    const where: Prisma.UnitWhereInput = {};
+    if (filter.status) where.status = filter.status;
+    return prisma.unit.findMany({
+      where,
+      orderBy: [{ propertyId: "asc" }, { label: "asc" }],
+      include: { property: true },
+    });
+  },
+
   findByProperty(propertyId: number) {
     return prisma.unit.findMany({
       where: { propertyId },

@@ -31,6 +31,11 @@ function parseRent(value: unknown): Prisma.Decimal {
 }
 
 export const unitService = {
+  list(filter: { status?: unknown } = {}) {
+    const status = filter.status === undefined ? undefined : assertUnitStatus(filter.status);
+    return unitRepository.findAll({ status });
+  },
+
   async listForProperty(propertyId: number) {
     const property = await propertyRepository.findById(propertyId);
     if (!property) throw new AppError("property not found", 404);

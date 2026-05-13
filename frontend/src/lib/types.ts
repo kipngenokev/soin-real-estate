@@ -33,17 +33,29 @@ export type TenantUser = {
   createdAt: string;
 };
 
+export type LeaseStatus = "DRAFT" | "ACTIVE" | "ENDED";
+
 export type LeaseWithUnit = {
   id: number;
   tenantId: number;
   unitId: number;
-  startDate: string;
+  status: LeaseStatus;
+  startDate: string | null;
   endDate: string | null;
   monthlyRent: string;
   createdAt: string;
   updatedAt: string;
   unit?: Unit & { property?: Property };
 };
+
+export type LeaseDetail = LeaseWithUnit & {
+  tenant?: {
+    id: number;
+    user: { id: number; email: string; fullName: string };
+  };
+};
+
+export type UnitWithProperty = Unit & { property?: Property };
 
 export type Tenant = {
   id: number;

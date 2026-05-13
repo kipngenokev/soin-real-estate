@@ -58,7 +58,7 @@ export const tenantController = {
 
   async endLease(req: Request, res: Response) {
     const tenantId = parseId(req.params.id);
-    const lease = await leaseService.endActive(tenantId);
+    const lease = await leaseService.endActiveForTenant(tenantId);
     res.status(200).json(ApiResponse.success(lease, "lease ended"));
   },
 };

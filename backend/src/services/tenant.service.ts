@@ -1,4 +1,4 @@
-import { Prisma, Role, UnitStatus } from "@prisma/client";
+import { LeaseStatus, Prisma, Role, UnitStatus } from "@prisma/client";
 import { prisma } from "../config/prisma";
 import { tenantRepository } from "../repositories/tenant.repository";
 import { password } from "../utils/password";
@@ -117,12 +117,12 @@ export const tenantService = {
 
     await prisma.$transaction(async (tx) => {
       const activeLease = await tx.lease.findFirst({
-        where: { tenantId: tenant.id, endDate: null },
+        where: { tenantId: tenant.id, status: LeaseStatus.ACTIVE },
       });
       if (activeLease) {
         await tx.lease.update({
           where: { id: activeLease.id },
-          data: { endDate: new Date() },
+          data: { status: LeaseStatus.ENDED, endDate: new Date() },
         });
         await tx.unit.update({
           where: { id: activeLease.unitId },
