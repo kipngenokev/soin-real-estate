@@ -9,6 +9,7 @@ const navItems: NavItem[] = [
   { to: "/admin/tenants", label: "Tenants", roles: ["ADMIN"] },
   { to: "/admin/leases", label: "Leases", roles: ["ADMIN"] },
   { to: "/admin/payments", label: "Payments", roles: ["ADMIN"] },
+  { to: "/admin/issues", label: "Issues", roles: ["ADMIN"] },
   { to: "/portal", label: "Overview", roles: ["TENANT"] },
   { to: "/portal/lease", label: "My Lease", roles: ["TENANT"] },
   { to: "/portal/payments", label: "My Payments", roles: ["TENANT"] },

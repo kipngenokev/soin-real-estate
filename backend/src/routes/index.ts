@@ -6,6 +6,8 @@ import unitRoutes from "./unit.routes";
 import tenantRoutes from "./tenant.routes";
 import leaseRoutes from "./lease.routes";
 import paymentRoutes from "./payment.routes";
+import issueRoutes from "./issue.routes";
+import portalRoutes from "./portal.routes";
 
 const router = Router();
 
@@ -19,5 +21,7 @@ router.use("/units", unitRoutes);
 router.use("/tenants", tenantRoutes);
 router.use("/leases", leaseRoutes);
 router.use("/payments", paymentRoutes);
+router.use("/issues", issueRoutes);
+router.use("/portal", portalRoutes);
 
 export default router;

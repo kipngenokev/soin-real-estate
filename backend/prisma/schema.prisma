@@ -34,6 +34,11 @@ enum PaymentMethod {
   MPESA
 }
 
+enum IssueStatus {
+  OPEN
+  RESOLVED
+}
+
 model User {
   id           Int      @id @default(autoincrement())
   email        String   @unique
@@ -72,6 +77,7 @@ model Unit {
 
   property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   leases   Lease[]
+  issues   Issue[]
 
   @@unique([propertyId, label])
   @@index([propertyId])
@@ -89,6 +95,7 @@ model Tenant {
 
   user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   leases Lease[]
+  issues Issue[]
 }
 
 model Lease {
@@ -127,4 +134,23 @@ model Payment {
   @@index([leaseId])
   @@index([method])
   @@index([paidAt])
+}
+
+model Issue {
+  id          Int         @id @default(autoincrement())
+  tenantId    Int
+  unitId      Int
+  title       String
+  description String      @db.Text
+  status      IssueStatus @default(OPEN)
+  resolvedAt  DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  unit   Unit   @relation(fields: [unitId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([tenantId])
+  @@index([unitId])
 }

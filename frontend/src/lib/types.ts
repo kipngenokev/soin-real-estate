@@ -99,6 +99,25 @@ export type TenantPaymentsView = {
   };
 };
 
+export type IssueStatus = "OPEN" | "RESOLVED";
+
+export type Issue = {
+  id: number;
+  tenantId: number;
+  unitId: number;
+  title: string;
+  description: string;
+  status: IssueStatus;
+  resolvedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  tenant?: {
+    id: number;
+    user: { id: number; email: string; fullName: string };
+  };
+  unit?: Unit & { property?: Property };
+};
+
 export type Tenant = {
   id: number;
   userId: number;
