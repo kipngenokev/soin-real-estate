@@ -5,6 +5,8 @@ import { RoleRedirect } from "../components/auth/RoleRedirect";
 import { Login } from "../pages/Login";
 import { AdminDashboard } from "../pages/AdminDashboard";
 import { TenantPortal } from "../pages/TenantPortal";
+import { PropertiesPage } from "../pages/admin/PropertiesPage";
+import { PropertyDetailPage } from "../pages/admin/PropertyDetailPage";
 
 export function AppRouter() {
   return (
@@ -15,7 +17,8 @@ export function AppRouter() {
       <Route element={<ProtectedRoute roles={["ADMIN"]} />}>
         <Route element={<AppLayout />}>
           <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/properties" element={<AdminDashboard />} />
+          <Route path="/admin/properties" element={<PropertiesPage />} />
+          <Route path="/admin/properties/:id" element={<PropertyDetailPage />} />
           <Route path="/admin/tenants" element={<AdminDashboard />} />
           <Route path="/admin/payments" element={<AdminDashboard />} />
         </Route>

@@ -12,6 +12,16 @@ enum Role {
   TENANT
 }
 
+enum UnitType {
+  STUDIO
+  ONE_BEDROOM
+}
+
+enum UnitStatus {
+  AVAILABLE
+  OCCUPIED
+}
+
 model User {
   id           Int      @id @default(autoincrement())
   email        String   @unique
@@ -23,4 +33,32 @@ model User {
   updatedAt    DateTime @updatedAt
 
   @@index([role])
+}
+
+model Property {
+  id          Int      @id @default(autoincrement())
+  name        String
+  location    String
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  units Unit[]
+}
+
+model Unit {
+  id         Int        @id @default(autoincrement())
+  propertyId Int
+  label      String
+  type       UnitType
+  rentAmount Decimal    @db.Decimal(12, 2)
+  status     UnitStatus @default(AVAILABLE)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@unique([propertyId, label])
+  @@index([propertyId])
+  @@index([status])
 }
