@@ -39,7 +39,7 @@ export function PropertiesPage() {
     setItems((prev) => {
       const exists = prev.find((i) => i.id === p.id);
       if (exists) return prev.map((i) => (i.id === p.id ? { ...i, ...p } : i));
-      return [{ ...p, _count: { units: 0 } }, ...prev];
+      return [p, ...prev];
     });
   }
 

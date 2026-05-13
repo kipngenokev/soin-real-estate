@@ -22,8 +22,8 @@ export const propertyController = {
   },
 
   async create(req: Request, res: Response) {
-    const { name, location, description } = req.body ?? {};
-    const item = await propertyService.create({ name, location, description });
+    const { name, location, description, unitGroups } = req.body ?? {};
+    const item = await propertyService.create({ name, location, description, unitGroups });
     res.status(201).json(ApiResponse.success(item, "property created"));
   },
 
