@@ -57,6 +57,48 @@ export type LeaseDetail = LeaseWithUnit & {
 
 export type UnitWithProperty = Unit & { property?: Property };
 
+export type PaymentMethod = "CASH" | "BANK" | "MPESA";
+
+export type Payment = {
+  id: number;
+  leaseId: number;
+  amount: string;
+  method: PaymentMethod;
+  reference: string | null;
+  note: string | null;
+  paidAt: string;
+  createdAt: string;
+  updatedAt: string;
+  lease?: LeaseDetail;
+};
+
+export type MonthlySummary = {
+  month: string; // YYYY-MM
+  total: string;
+  count: number;
+  byMethod: Record<PaymentMethod, string>;
+};
+
+export type TenantLeaseFinancials = {
+  leaseId: number;
+  status: LeaseStatus;
+  unitId: number;
+  monthsBilled: number;
+  totalBilled: string;
+  totalPaid: string;
+  balance: string;
+};
+
+export type TenantPaymentsView = {
+  payments: Payment[];
+  leases: TenantLeaseFinancials[];
+  summary: {
+    totalBilled: string;
+    totalPaid: string;
+    outstanding: string;
+  };
+};
+
 export type Tenant = {
   id: number;
   userId: number;

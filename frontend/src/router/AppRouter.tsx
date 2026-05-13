@@ -11,6 +11,7 @@ import { TenantsPage } from "../pages/admin/TenantsPage";
 import { TenantDetailPage } from "../pages/admin/TenantDetailPage";
 import { LeasesPage } from "../pages/admin/LeasesPage";
 import { LeaseDetailPage } from "../pages/admin/LeaseDetailPage";
+import { PaymentsPage } from "../pages/admin/PaymentsPage";
 
 export function AppRouter() {
   return (
@@ -27,7 +28,7 @@ export function AppRouter() {
           <Route path="/admin/tenants/:id" element={<TenantDetailPage />} />
           <Route path="/admin/leases" element={<LeasesPage />} />
           <Route path="/admin/leases/:id" element={<LeaseDetailPage />} />
-          <Route path="/admin/payments" element={<AdminDashboard />} />
+          <Route path="/admin/payments" element={<PaymentsPage />} />
         </Route>
       </Route>
 

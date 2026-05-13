@@ -2,11 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AxiosError } from "axios";
 import { tenantsApi } from "../../lib/api/tenants";
-import type { Tenant } from "../../lib/types";
+import { paymentsApi } from "../../lib/api/payments";
+import type { Tenant, TenantPaymentsView } from "../../lib/types";
 import { TenantFormModal } from "../../components/tenants/TenantFormModal";
 import { AssignLeaseModal } from "../../components/tenants/AssignLeaseModal";
 import { ConfirmDialog } from "../../components/ui/ConfirmDialog";
 import { LeaseStatusBadge } from "../../components/leases/LeaseStatusBadge";
+import { PaymentMethodBadge } from "../../components/payments/PaymentMethodBadge";
+import { PaymentFormModal } from "../../components/payments/PaymentFormModal";
 
 export function TenantDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -14,11 +17,13 @@ export function TenantDetailPage() {
   const navigate = useNavigate();
 
   const [tenant, setTenant] = useState<Tenant | null>(null);
+  const [paymentsView, setPaymentsView] = useState<TenantPaymentsView | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const [editOpen, setEditOpen] = useState(false);
   const [assignOpen, setAssignOpen] = useState(false);
+  const [paymentOpen, setPaymentOpen] = useState(false);
   const [endingLease, setEndingLease] = useState(false);
   const [endLeaseBusy, setEndLeaseBusy] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -28,7 +33,12 @@ export function TenantDetailPage() {
     setLoading(true);
     setError(null);
     try {
-      setTenant(await tenantsApi.get(tenantId));
+      const [t, payments] = await Promise.all([
+        tenantsApi.get(tenantId),
+        paymentsApi.forTenant(tenantId),
+      ]);
+      setTenant(t);
+      setPaymentsView(payments);
     } catch (err) {
       setError(
         err instanceof AxiosError
@@ -182,6 +192,82 @@ export function TenantDetailPage() {
             )}
           </div>
 
+          {paymentsView && (
+            <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="text-lg font-semibold text-gray-900">Payments &amp; balance</h3>
+                <button
+                  onClick={() => setPaymentOpen(true)}
+                  disabled={!lease}
+                  title={!lease ? "Tenant must have an active lease" : undefined}
+                  className="px-3 py-1.5 text-sm rounded-md bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-60"
+                >
+                  + Record payment
+                </button>
+              </div>
+
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <SmallStat label="Total billed">
+                  {Number(paymentsView.summary.totalBilled).toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </SmallStat>
+                <SmallStat label="Total paid">
+                  {Number(paymentsView.summary.totalPaid).toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </SmallStat>
+                <SmallStat
+                  label="Outstanding"
+                  emphasis={Number(paymentsView.summary.outstanding) > 0 ? "danger" : "ok"}
+                >
+                  {Number(paymentsView.summary.outstanding).toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </SmallStat>
+              </div>
+
+              {paymentsView.payments.length === 0 ? (
+                <p className="mt-4 text-sm text-gray-500">No payments recorded yet.</p>
+              ) : (
+                <div className="mt-4 overflow-hidden rounded-md border border-gray-200">
+                  <table className="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
+                      <tr>
+                        <th className="px-4 py-2 text-left font-medium">Paid on</th>
+                        <th className="px-4 py-2 text-left font-medium">Method</th>
+                        <th className="px-4 py-2 text-left font-medium">Reference</th>
+                        <th className="px-4 py-2 text-right font-medium">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 bg-white">
+                      {paymentsView.payments.map((p) => (
+                        <tr key={p.id} className="hover:bg-gray-50">
+                          <td className="px-4 py-2 text-gray-700">
+                            {new Date(p.paidAt).toLocaleDateString()}
+                          </td>
+                          <td className="px-4 py-2">
+                            <PaymentMethodBadge method={p.method} />
+                          </td>
+                          <td className="px-4 py-2 text-gray-700">{p.reference ?? "—"}</td>
+                          <td className="px-4 py-2 text-right font-semibold text-gray-900">
+                            {Number(p.amount).toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
+
           {history.length > 0 && (
             <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
               <h3 className="text-lg font-semibold text-gray-900">Lease history</h3>
@@ -243,6 +329,13 @@ export function TenantDetailPage() {
         onAssigned={() => reload()}
       />
 
+      <PaymentFormModal
+        open={paymentOpen}
+        lockedLeaseId={lease?.id}
+        onClose={() => setPaymentOpen(false)}
+        onSaved={() => reload()}
+      />
+
       <ConfirmDialog
         open={endingLease}
         title="End lease"
@@ -271,5 +364,28 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
       <dt className="text-gray-500">{label}</dt>
       <dd className="text-gray-900">{children}</dd>
     </>
+  );
+}
+
+function SmallStat({
+  label,
+  children,
+  emphasis,
+}: {
+  label: string;
+  children: React.ReactNode;
+  emphasis?: "ok" | "danger";
+}) {
+  const valueClass =
+    emphasis === "danger"
+      ? "text-red-700"
+      : emphasis === "ok"
+        ? "text-emerald-700"
+        : "text-gray-900";
+  return (
+    <div className="rounded-md border border-gray-200 p-3">
+      <div className="text-xs uppercase tracking-wide text-gray-500">{label}</div>
+      <div className={`text-lg font-semibold mt-1 ${valueClass}`}>{children}</div>
+    </div>
   );
 }

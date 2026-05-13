@@ -5,6 +5,7 @@ import propertyRoutes from "./property.routes";
 import unitRoutes from "./unit.routes";
 import tenantRoutes from "./tenant.routes";
 import leaseRoutes from "./lease.routes";
+import paymentRoutes from "./payment.routes";
 
 const router = Router();
 
@@ -17,5 +18,6 @@ router.use("/properties", propertyRoutes);
 router.use("/units", unitRoutes);
 router.use("/tenants", tenantRoutes);
 router.use("/leases", leaseRoutes);
+router.use("/payments", paymentRoutes);
 
 export default router;

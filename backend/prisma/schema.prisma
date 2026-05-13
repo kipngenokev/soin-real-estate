@@ -28,6 +28,12 @@ enum LeaseStatus {
   ENDED
 }
 
+enum PaymentMethod {
+  CASH
+  BANK
+  MPESA
+}
+
 model User {
   id           Int      @id @default(autoincrement())
   email        String   @unique
@@ -96,10 +102,29 @@ model Lease {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
-  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  unit   Unit   @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  tenant   Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  unit     Unit      @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  payments Payment[]
 
   @@index([tenantId])
   @@index([unitId])
   @@index([status])
+}
+
+model Payment {
+  id        Int           @id @default(autoincrement())
+  leaseId   Int
+  amount    Decimal       @db.Decimal(12, 2)
+  method    PaymentMethod
+  reference String?
+  note      String?       @db.Text
+  paidAt    DateTime      @default(now())
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  lease Lease @relation(fields: [leaseId], references: [id], onDelete: Cascade)
+
+  @@index([leaseId])
+  @@index([method])
+  @@index([paidAt])
 }
