@@ -16,7 +16,8 @@ No microservices, no queues, no Redis, no event bus. MVP-simple by design.
 - Node.js 20+
 - npm 10+
 - MySQL 8+
-- PHP 8.2+ (only needed once the reports layer lands)
+- PHP 8.1+ with `php-xml`, `php-gd`, `php-mbstring`, `php-zip` (for the reports utility)
+- Composer 2+
 
 ## Repository layout
 
@@ -65,6 +66,18 @@ cp .env.example .env
 npm install
 npm run dev                  # http://localhost:5173
 ```
+
+### 4. PHP reports utility (optional for browsing, required for PDFs/CSV)
+
+```bash
+cd php-reports
+composer install
+composer start               # http://127.0.0.1:8080
+```
+
+Node talks to this service over HTTP — set `PHP_REPORTS_URL` in the backend
+`.env` if you run it on a different host or port (default `http://127.0.0.1:8080`).
+See `php-reports/README.md` for the full API.
 
 Open `http://localhost:5173`, sign in with the seeded admin. You will be
 redirected to `/admin`. Tenant users (created by an admin) land on `/portal`.

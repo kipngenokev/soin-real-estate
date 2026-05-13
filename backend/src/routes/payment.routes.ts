@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { Role } from "@prisma/client";
 import { paymentController } from "../controllers/payment.controller";
+import { reportController } from "../controllers/report.controller";
 import { requireAuth } from "../middlewares/requireAuth";
 import { requireRole } from "../middlewares/requireRole";
 import { asyncHandler } from "../utils/asyncHandler";
@@ -15,5 +16,7 @@ router.post("/", asyncHandler(paymentController.create));
 router.get("/:id", asyncHandler(paymentController.get));
 router.put("/:id", asyncHandler(paymentController.update));
 router.delete("/:id", asyncHandler(paymentController.remove));
+
+router.get("/:id/receipt.pdf", asyncHandler(reportController.paymentReceipt));
 
 export default router;

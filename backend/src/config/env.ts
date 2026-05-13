@@ -22,4 +22,5 @@ export const env = {
     accessTtl: process.env.JWT_ACCESS_TTL ?? "15m",
     refreshTtl: process.env.JWT_REFRESH_TTL ?? "7d",
   },
+  phpReportsUrl: process.env.PHP_REPORTS_URL ?? "http://127.0.0.1:8080",
 };
