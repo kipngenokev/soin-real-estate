@@ -8,6 +8,7 @@ import leaseRoutes from "./lease.routes";
 import paymentRoutes from "./payment.routes";
 import issueRoutes from "./issue.routes";
 import portalRoutes from "./portal.routes";
+import dashboardRoutes from "./dashboard.routes";
 
 const router = Router();
 
@@ -23,5 +24,6 @@ router.use("/leases", leaseRoutes);
 router.use("/payments", paymentRoutes);
 router.use("/issues", issueRoutes);
 router.use("/portal", portalRoutes);
+router.use("/admin", dashboardRoutes);
 
 export default router;
