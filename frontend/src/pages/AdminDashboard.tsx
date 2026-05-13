@@ -43,6 +43,55 @@ function fmtMonth(ym: string) {
   return new Date(y, m - 1, 1).toLocaleString(undefined, { month: "short" });
 }
 
+const STAT_ICONS = {
+  Building: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
+      strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+      <path d="M3 21h18" />
+      <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+      <path d="M9 7h.01M9 11h.01M9 15h.01M15 7h.01M15 11h.01M15 15h.01" />
+    </svg>
+  ),
+  Grid: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
+      strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+      <rect x="3" y="3" width="7" height="7" rx="1.5" />
+      <rect x="14" y="3" width="7" height="7" rx="1.5" />
+      <rect x="3" y="14" width="7" height="7" rx="1.5" />
+      <rect x="14" y="14" width="7" height="7" rx="1.5" />
+    </svg>
+  ),
+  Pie: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
+      strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+      <path d="M21 12a9 9 0 1 1-9-9v9z" />
+      <path d="M21 12a9 9 0 0 0-9-9" />
+    </svg>
+  ),
+  Doc: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
+      strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+      <path d="M14 3v5h5" />
+      <path d="M9 13h6M9 17h4" />
+    </svg>
+  ),
+  Cash: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
+      strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+      <rect x="2.5" y="6" width="19" height="12" rx="2" />
+      <circle cx="12" cy="12" r="2.6" />
+    </svg>
+  ),
+  Alert: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
+      strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+      <path d="M12 9v4M12 17h.01" />
+      <path d="M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+    </svg>
+  ),
+};
+
 export function AdminDashboard() {
   const { user } = useAuth();
   const [data, setData] = useState<LoadState>(initial);
@@ -95,92 +144,87 @@ export function AdminDashboard() {
   const s = data.stats;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-semibold text-gray-900">Dashboard</h2>
-        <p className="text-sm text-gray-500 mt-1">
-          Welcome back{user ? `, ${user.fullName}` : ""}. Here's what's happening across your portfolio.
-        </p>
-      </div>
+    <div className="space-y-8">
+      <header className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.08em] text-ink-soft font-semibold">
+            Overview
+          </p>
+          <h2 className="text-3xl font-semibold text-ink tracking-tight mt-1">
+            Welcome back{user ? `, ${user.fullName.split(" ")[0]}` : ""}
+          </h2>
+          <p className="text-sm text-ink-muted mt-1.5">
+            Here's what's happening across your portfolio right now.
+          </p>
+        </div>
+        <Link to="/admin/tenants" className="btn-primary">
+          + Onboard tenant
+        </Link>
+      </header>
 
       {error && (
-        <div className="rounded-md bg-red-50 border border-red-200 px-3 py-2 text-sm text-red-700">
+        <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
           {error}
         </div>
       )}
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <Stat
-          label="Properties"
-          value={loading ? "—" : s?.properties ?? 0}
-          href="/admin/properties"
-        />
-        <Stat
-          label="Units"
-          value={loading ? "—" : s?.units.total ?? 0}
-          hint={
-            !loading && s
-              ? `${s.units.occupied} occupied · ${s.units.available} available`
-              : undefined
-          }
-          href="/admin/properties"
-        />
-        <Stat
-          label="Occupancy"
-          value={loading ? "—" : `${s?.occupancyRate.toFixed(1) ?? "0.0"}%`}
-        />
-        <Stat
-          label="Active leases"
-          value={loading ? "—" : s?.activeLeases ?? 0}
-          href="/admin/leases"
-        />
-        <Stat
-          label="Total payments"
-          value={loading ? "—" : fmtMoney(s?.payments.totalAmount ?? 0)}
-          hint={!loading && s ? `${s.payments.count} entries` : undefined}
-          href="/admin/payments"
-        />
-        <Stat
-          label="Open issues"
-          value={loading ? "—" : s?.openIssues ?? 0}
-          emphasis={s && s.openIssues > 0 ? "danger" : "ok"}
-          href="/admin/issues"
-        />
-      </div>
+      <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <Stat label="Properties" value={loading ? "—" : s?.properties ?? 0}
+              icon={STAT_ICONS.Building} href="/admin/properties" />
+        <Stat label="Units" value={loading ? "—" : s?.units.total ?? 0}
+              icon={STAT_ICONS.Grid}
+              hint={!loading && s ? `${s.units.occupied} occupied · ${s.units.available} free` : undefined}
+              href="/admin/properties" />
+        <Stat label="Occupancy" value={loading ? "—" : `${s?.occupancyRate.toFixed(1) ?? "0.0"}%`}
+              icon={STAT_ICONS.Pie} />
+        <Stat label="Active leases" value={loading ? "—" : s?.activeLeases ?? 0}
+              icon={STAT_ICONS.Doc} href="/admin/leases" />
+        <Stat label="Total payments" value={loading ? "—" : fmtMoney(s?.payments.totalAmount ?? 0)}
+              icon={STAT_ICONS.Cash}
+              hint={!loading && s ? `${s.payments.count} entries` : undefined}
+              href="/admin/payments" />
+        <Stat label="Open issues" value={loading ? "—" : s?.openIssues ?? 0}
+              icon={STAT_ICONS.Alert}
+              emphasis={s && s.openIssues > 0 ? "danger" : "ok"}
+              href="/admin/issues" />
+      </section>
 
-      <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-semibold text-gray-700">
-            Payments collected (last 6 months)
-          </h3>
-          <Link to="/admin/payments" className="text-xs text-slate-600 hover:underline">
+      <section className="bg-white rounded-xl border border-gray-100 shadow-card p-6">
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h3 className="text-base font-semibold text-ink">Payments collected</h3>
+            <p className="text-xs text-ink-soft mt-0.5">Last 6 months</p>
+          </div>
+          <Link to="/admin/payments" className="text-sm font-medium text-brand-700 hover:text-brand-800">
             View all →
           </Link>
         </div>
         {loading ? (
-          <div className="h-32 text-sm text-gray-500 flex items-center justify-center">
+          <div className="h-40 text-sm text-ink-soft flex items-center justify-center">
             Loading…
           </div>
         ) : chart.recent.length === 0 ? (
-          <div className="h-32 text-sm text-gray-500 flex items-center justify-center">
+          <div className="h-40 text-sm text-ink-soft flex items-center justify-center">
             No payment data yet.
           </div>
         ) : (
-          <div className="grid grid-cols-6 gap-3 items-end h-40">
+          <div className="grid grid-cols-6 gap-4 items-end h-44">
             {chart.recent.map((m) => {
               const v = Number(m.total);
-              const pct = chart.max === 0 ? 0 : Math.max((v / chart.max) * 100, v > 0 ? 4 : 0);
+              const pct = chart.max === 0 ? 0 : Math.max((v / chart.max) * 100, v > 0 ? 6 : 0);
               return (
                 <div key={m.month} className="flex flex-col items-center gap-2">
                   <div className="flex-1 w-full flex items-end">
                     <div
-                      className="w-full bg-slate-900/80 rounded-t"
+                      className={`w-full rounded-t-md transition-all ${
+                        v > 0 ? "bg-brand-500" : "bg-gray-100"
+                      }`}
                       style={{ height: `${pct}%` }}
                       title={fmtMoney(m.total)}
                     />
                   </div>
-                  <div className="text-[10px] text-gray-500">{fmtMonth(m.month)}</div>
-                  <div className="text-[11px] font-medium text-gray-700">
+                  <div className="text-[11px] text-ink-soft">{fmtMonth(m.month)}</div>
+                  <div className="text-xs font-semibold text-ink tabular-nums">
                     {v > 0 ? fmtMoney(m.total) : "—"}
                   </div>
                 </div>
@@ -188,9 +232,9 @@ export function AdminDashboard() {
             })}
           </div>
         )}
-      </div>
+      </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <ActivityCard
           title="Recent leases"
           viewAllHref="/admin/leases"
@@ -215,14 +259,14 @@ export function AdminDashboard() {
             meta: (
               <div className="flex items-center gap-2">
                 <PaymentMethodBadge method={p.method} />
-                <span className="font-semibold text-gray-900 tabular-nums">
+                <span className="font-semibold text-ink tabular-nums">
                   {fmtMoney(p.amount)}
                 </span>
               </div>
             ),
           }))}
         />
-      </div>
+      </section>
 
       <ActivityCard
         title="Open issues"
@@ -236,7 +280,7 @@ export function AdminDashboard() {
             i.unit?.property?.name ?? "—"
           } ${i.unit?.label ?? ""}`,
           meta: (
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-ink-soft">
               {new Date(i.createdAt).toLocaleDateString()}
             </span>
           ),
@@ -252,25 +296,37 @@ function Stat({
   hint,
   href,
   emphasis,
+  icon,
 }: {
   label: string;
   value: React.ReactNode;
   hint?: string;
   href?: string;
   emphasis?: "ok" | "danger";
+  icon?: React.ReactNode;
 }) {
   const valueClass =
-    emphasis === "danger"
-      ? "text-red-700"
-      : emphasis === "ok"
-        ? "text-gray-900"
-        : "text-gray-900";
+    emphasis === "danger" ? "text-red-700" : "text-ink";
+
+  const iconBg =
+    emphasis === "danger" ? "bg-red-50 text-red-600" : "bg-brand-50 text-brand-600";
 
   const body = (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm h-full hover:border-gray-300 transition-colors">
-      <div className="text-xs uppercase tracking-wide text-gray-500">{label}</div>
-      <div className={`text-2xl font-semibold mt-2 tabular-nums ${valueClass}`}>{value}</div>
-      {hint && <div className="text-xs text-gray-500 mt-1">{hint}</div>}
+    <div className="bg-white rounded-xl border border-gray-100 shadow-card p-4 h-full hover:border-gray-200 hover:shadow-lift transition-all">
+      <div className="flex items-start justify-between gap-2">
+        <span className="text-[11px] uppercase tracking-[0.06em] text-ink-soft font-semibold">
+          {label}
+        </span>
+        {icon && (
+          <span className={`h-8 w-8 rounded-lg flex items-center justify-center ${iconBg}`}>
+            {icon}
+          </span>
+        )}
+      </div>
+      <div className={`text-2xl font-semibold mt-2 tabular-nums tracking-tight ${valueClass}`}>
+        {value}
+      </div>
+      {hint && <div className="text-[11px] text-ink-soft mt-1">{hint}</div>}
     </div>
   );
 
@@ -303,23 +359,23 @@ function ActivityCard({
   empty: string;
 }) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
-        <h3 className="text-sm font-semibold text-gray-700">{title}</h3>
-        <Link to={viewAllHref} className="text-xs text-slate-600 hover:underline">
+    <div className="bg-white rounded-xl border border-gray-100 shadow-card overflow-hidden">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+        <h3 className="text-sm font-semibold text-ink">{title}</h3>
+        <Link to={viewAllHref} className="text-sm font-medium text-brand-700 hover:text-brand-800">
           View all →
         </Link>
       </div>
       {rows.length === 0 ? (
-        <div className="px-4 py-6 text-sm text-gray-500 text-center">{empty}</div>
+        <div className="px-5 py-8 text-sm text-ink-soft text-center">{empty}</div>
       ) : (
         <ul className="divide-y divide-gray-100">
           {rows.map((r) => {
             const inner = (
-              <div className="px-4 py-3 flex items-center justify-between gap-4 hover:bg-gray-50">
+              <div className="px-5 py-3.5 flex items-center justify-between gap-4 hover:bg-gray-50 transition-colors">
                 <div className="min-w-0">
-                  <div className="text-sm font-medium text-gray-900 truncate">{r.primary}</div>
-                  <div className="text-xs text-gray-500 truncate">{r.secondary}</div>
+                  <div className="text-sm font-medium text-ink truncate">{r.primary}</div>
+                  <div className="text-xs text-ink-soft truncate mt-0.5">{r.secondary}</div>
                 </div>
                 <div className="shrink-0">{r.meta}</div>
               </div>

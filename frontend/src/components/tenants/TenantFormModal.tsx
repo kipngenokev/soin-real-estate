@@ -143,7 +143,7 @@ export function TenantFormModal({ open, initial, onClose, onSaved }: Props) {
             type="submit"
             form="tenant-form"
             disabled={submitting}
-            className="px-3 py-1.5 text-sm rounded-md bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-60"
+            className="px-3 py-1.5 text-sm rounded-md bg-brand-500 text-white hover:bg-brand-600 disabled:opacity-60"
           >
             {buttonLabel}
           </button>
@@ -157,7 +157,7 @@ export function TenantFormModal({ open, initial, onClose, onSaved }: Props) {
               value={form.fullName}
               onChange={(e) => setForm({ ...form, fullName: e.target.value })}
               required
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
             />
           </Field>
           <Field label="Email" required>
@@ -167,7 +167,7 @@ export function TenantFormModal({ open, initial, onClose, onSaved }: Props) {
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               required
               disabled={isEdit}
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 disabled:bg-gray-100"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 disabled:bg-gray-100"
             />
           </Field>
         </div>
@@ -181,7 +181,7 @@ export function TenantFormModal({ open, initial, onClose, onSaved }: Props) {
               required
               minLength={8}
               placeholder="Min 8 characters"
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
             />
             <p className="text-xs text-gray-500 mt-1">
               Share this with the tenant. They will use it to sign in.
@@ -194,14 +194,14 @@ export function TenantFormModal({ open, initial, onClose, onSaved }: Props) {
             <input
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
             />
           </Field>
           <Field label="National ID">
             <input
               value={form.nationalId}
               onChange={(e) => setForm({ ...form, nationalId: e.target.value })}
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
             />
           </Field>
         </div>
@@ -211,7 +211,7 @@ export function TenantFormModal({ open, initial, onClose, onSaved }: Props) {
             value={form.emergencyContact}
             onChange={(e) => setForm({ ...form, emergencyContact: e.target.value })}
             placeholder="Name and phone"
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
           />
         </Field>
 
@@ -236,7 +236,7 @@ export function TenantFormModal({ open, initial, onClose, onSaved }: Props) {
                   })
                 }
                 disabled={unitsLoading}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
               >
                 <option value="">
                   {unitsLoading

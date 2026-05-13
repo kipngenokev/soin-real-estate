@@ -140,7 +140,7 @@ export function PropertyFormModal({ open, initial, onClose, onSaved }: Props) {
             type="submit"
             form="property-form"
             disabled={submitting}
-            className="px-3 py-1.5 text-sm rounded-md bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-60"
+            className="px-3 py-1.5 text-sm rounded-md bg-brand-500 text-white hover:bg-brand-600 disabled:opacity-60"
           >
             {submitting
               ? "Saving…"
@@ -160,7 +160,7 @@ export function PropertyFormModal({ open, initial, onClose, onSaved }: Props) {
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             required
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
           />
         </div>
         <div>
@@ -169,7 +169,7 @@ export function PropertyFormModal({ open, initial, onClose, onSaved }: Props) {
             value={form.location}
             onChange={(e) => setForm({ ...form, location: e.target.value })}
             required
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
           />
         </div>
         <div>
@@ -178,7 +178,7 @@ export function PropertyFormModal({ open, initial, onClose, onSaved }: Props) {
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
             rows={3}
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
           />
         </div>
 
@@ -211,7 +211,7 @@ export function PropertyFormModal({ open, initial, onClose, onSaved }: Props) {
                       step={1}
                       value={g.count}
                       onChange={(e) => updateGroup(idx, { count: e.target.value })}
-                      className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500"
+                      className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
                     />
                   </div>
                   <div className="col-span-4">
@@ -223,7 +223,7 @@ export function PropertyFormModal({ open, initial, onClose, onSaved }: Props) {
                       value={g.rentAmount}
                       onChange={(e) => updateGroup(idx, { rentAmount: e.target.value })}
                       disabled={Number(g.count || "0") <= 0}
-                      className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500 disabled:bg-gray-100"
+                      className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 disabled:bg-gray-100"
                     />
                   </div>
                 </div>

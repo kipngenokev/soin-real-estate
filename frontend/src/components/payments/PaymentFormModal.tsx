@@ -132,7 +132,7 @@ export function PaymentFormModal({
             type="submit"
             form="payment-form"
             disabled={submitting || !form.leaseId}
-            className="px-3 py-1.5 text-sm rounded-md bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-60"
+            className="px-3 py-1.5 text-sm rounded-md bg-brand-500 text-white hover:bg-brand-600 disabled:opacity-60"
           >
             {submitting ? "Saving…" : "Record payment"}
           </button>
@@ -152,7 +152,7 @@ export function PaymentFormModal({
                 })
               }
               disabled={loading}
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
             >
               <option value="">
                 {loading
@@ -181,7 +181,7 @@ export function PaymentFormModal({
               value={form.amount}
               onChange={(e) => setForm({ ...form, amount: e.target.value })}
               required
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
             />
           </div>
           <div>
@@ -191,7 +191,7 @@ export function PaymentFormModal({
               onChange={(e) =>
                 setForm({ ...form, method: e.target.value as PaymentMethod })
               }
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
             >
               <option value="CASH">Cash</option>
               <option value="BANK">Bank</option>
@@ -208,7 +208,7 @@ export function PaymentFormModal({
               value={form.paidAt}
               onChange={(e) => setForm({ ...form, paidAt: e.target.value })}
               required
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
             />
           </div>
           <div>
@@ -217,7 +217,7 @@ export function PaymentFormModal({
               value={form.reference}
               onChange={(e) => setForm({ ...form, reference: e.target.value })}
               placeholder="Txn ID, M-Pesa code…"
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
             />
           </div>
         </div>
@@ -228,7 +228,7 @@ export function PaymentFormModal({
             value={form.note}
             onChange={(e) => setForm({ ...form, note: e.target.value })}
             rows={2}
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
           />
         </div>
 

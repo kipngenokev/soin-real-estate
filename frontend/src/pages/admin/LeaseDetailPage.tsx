@@ -122,7 +122,7 @@ export function LeaseDetailPage() {
             {lease.status === "ACTIVE" && (
               <button
                 onClick={() => setEndingOpen(true)}
-                className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
+                className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-ink-muted hover:bg-gray-100"
               >
                 End lease
               </button>
@@ -138,14 +138,14 @@ export function LeaseDetailPage() {
       )}
 
       {loading && !lease ? (
-        <div className="text-sm text-gray-500">Loading…</div>
+        <div className="text-sm text-ink-soft">Loading…</div>
       ) : lease ? (
         <>
           <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
             <div className="flex items-start justify-between">
               <div>
-                <h2 className="text-2xl font-semibold text-gray-900">Lease #{lease.id}</h2>
-                <p className="text-sm text-gray-500 mt-1">
+                <h2 className="text-3xl font-semibold text-ink tracking-tight">Lease #{lease.id}</h2>
+                <p className="text-sm text-ink-muted mt-1.5">
                   Created {new Date(lease.createdAt).toLocaleDateString()}
                 </p>
               </div>
@@ -195,7 +195,7 @@ export function LeaseDetailPage() {
           </div>
         </>
       ) : (
-        <div className="text-sm text-gray-500">Lease not found.</div>
+        <div className="text-sm text-ink-soft">Lease not found.</div>
       )}
 
       <ConfirmDialog
@@ -223,7 +223,7 @@ export function LeaseDetailPage() {
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <>
-      <dt className="text-gray-500">{label}</dt>
+      <dt className="text-ink-soft">{label}</dt>
       <dd className="text-gray-900">{children}</dd>
     </>
   );

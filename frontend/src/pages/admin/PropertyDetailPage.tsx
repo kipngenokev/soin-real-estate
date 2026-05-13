@@ -111,18 +111,18 @@ export function PropertyDetailPage() {
       )}
 
       {loading && !property ? (
-        <div className="text-sm text-gray-500">Loading…</div>
+        <div className="text-sm text-ink-soft">Loading…</div>
       ) : property ? (
         <>
           <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
-            <h2 className="text-2xl font-semibold text-gray-900">{property.name}</h2>
-            <p className="text-sm text-gray-500 mt-1">{property.location}</p>
+            <h2 className="text-3xl font-semibold text-ink tracking-tight">{property.name}</h2>
+            <p className="text-sm text-ink-muted mt-1.5">{property.location}</p>
             {property.description && (
-              <p className="text-sm text-gray-700 mt-3 whitespace-pre-line">
+              <p className="text-sm text-ink-muted mt-3 whitespace-pre-line">
                 {property.description}
               </p>
             )}
-            <div className="mt-4 text-xs text-gray-500">
+            <div className="mt-4 text-xs text-ink-soft">
               {property._count?.units ?? units.length} unit
               {(property._count?.units ?? units.length) === 1 ? "" : "s"}
             </div>
@@ -135,14 +135,14 @@ export function PropertyDetailPage() {
                 setEditingUnit(null);
                 setUnitFormOpen(true);
               }}
-              className="px-3 py-2 text-sm font-medium rounded-md bg-slate-900 text-white hover:bg-slate-800"
+              className="px-3 py-2 text-sm font-medium rounded-md bg-brand-500 text-white hover:bg-brand-600"
             >
               + New unit
             </button>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="bg-white rounded-xl border border-gray-100 shadow-card overflow-hidden">
+            <table className="min-w-full divide-y divide-gray-100">
               <thead className="bg-gray-50">
                 <tr>
                   <Th>Label</Th>
@@ -155,7 +155,7 @@ export function PropertyDetailPage() {
               <tbody className="divide-y divide-gray-100 bg-white">
                 {units.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="px-4 py-6 text-sm text-gray-500 text-center">
+                    <td colSpan={5} className="px-4 py-6 text-sm text-ink-soft text-center">
                       No units yet.
                     </td>
                   </tr>
@@ -163,8 +163,8 @@ export function PropertyDetailPage() {
                 {units.map((u) => (
                   <tr key={u.id} className="hover:bg-gray-50">
                     <td className="px-4 py-3 text-sm font-medium text-gray-900">{u.label}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">{typeLabel[u.type]}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">
+                    <td className="px-4 py-3 text-sm text-ink-muted">{typeLabel[u.type]}</td>
+                    <td className="px-4 py-3 text-sm text-ink-muted">
                       {Number(u.rentAmount).toLocaleString(undefined, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
@@ -176,7 +176,7 @@ export function PropertyDetailPage() {
                     <td className="px-4 py-3 text-sm text-right space-x-3">
                       <button
                         onClick={() => onToggleStatus(u)}
-                        className="text-slate-700 hover:underline"
+                        className="text-ink-muted hover:text-brand-700 font-medium"
                       >
                         Mark {u.status === "AVAILABLE" ? "occupied" : "available"}
                       </button>
@@ -185,7 +185,7 @@ export function PropertyDetailPage() {
                           setEditingUnit(u);
                           setUnitFormOpen(true);
                         }}
-                        className="text-slate-700 hover:underline"
+                        className="text-ink-muted hover:text-brand-700 font-medium"
                       >
                         Edit
                       </button>
@@ -203,11 +203,11 @@ export function PropertyDetailPage() {
           </div>
         </>
       ) : (
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-ink-soft">
           Property not found.{" "}
           <button
             onClick={() => navigate("/admin/properties")}
-            className="text-slate-700 hover:underline"
+            className="text-ink-muted hover:text-brand-700 font-medium"
           >
             Go back
           </button>
@@ -237,7 +237,7 @@ export function PropertyDetailPage() {
 function Th({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wide text-left ${className}`}
+      className={`px-4 py-2 text-xs font-medium text-ink-soft uppercase tracking-wide text-left ${className}`}
     >
       {children}
     </th>

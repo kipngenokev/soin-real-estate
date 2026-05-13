@@ -72,14 +72,14 @@ export function TenantsPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-semibold text-gray-900">Tenants</h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <h2 className="text-3xl font-semibold text-ink tracking-tight">Tenants</h2>
+          <p className="text-sm text-ink-muted mt-1.5">
             Manage tenant accounts and unit assignments.
           </p>
         </div>
         <button
           onClick={() => setFormOpen(true)}
-          className="px-3 py-2 text-sm font-medium rounded-md bg-slate-900 text-white hover:bg-slate-800"
+          className="px-3 py-2 text-sm font-medium rounded-md bg-brand-500 text-white hover:bg-brand-600"
         >
           + Onboard tenant
         </button>
@@ -90,7 +90,7 @@ export function TenantsPage() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search by name, email, phone or ID number…"
-          className="w-full max-w-md rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+          className="w-full max-w-md rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
         />
       </div>
 
@@ -100,8 +100,8 @@ export function TenantsPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
+      <div className="bg-white rounded-xl border border-gray-100 shadow-card overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-100">
           <thead className="bg-gray-50">
             <tr>
               <Th>Name</Th>
@@ -114,14 +114,14 @@ export function TenantsPage() {
           <tbody className="divide-y divide-gray-100 bg-white">
             {loading && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-sm text-gray-500 text-center">
+                <td colSpan={5} className="px-4 py-6 text-sm text-ink-soft text-center">
                   Loading…
                 </td>
               </tr>
             )}
             {!loading && items.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-sm text-gray-500 text-center">
+                <td colSpan={5} className="px-4 py-6 text-sm text-ink-soft text-center">
                   {query
                     ? "No tenants match your search."
                     : "No tenants yet. Click Onboard tenant to add one."}
@@ -139,18 +139,18 @@ export function TenantsPage() {
                     <td className="px-4 py-3 text-sm">
                       <Link
                         to={`/admin/tenants/${t.id}`}
-                        className="font-medium text-slate-900 hover:underline"
+                        className="font-medium text-ink hover:text-brand-700"
                       >
                         {t.user.fullName}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-700">{t.user.email}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">{t.phone ?? "—"}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">{assignment}</td>
+                    <td className="px-4 py-3 text-sm text-ink-muted">{t.user.email}</td>
+                    <td className="px-4 py-3 text-sm text-ink-muted">{t.phone ?? "—"}</td>
+                    <td className="px-4 py-3 text-sm text-ink-muted">{assignment}</td>
                     <td className="px-4 py-3 text-sm text-right space-x-3">
                       <Link
                         to={`/admin/tenants/${t.id}`}
-                        className="text-slate-700 hover:underline"
+                        className="text-ink-muted hover:text-brand-700 font-medium"
                       >
                         View
                       </Link>
@@ -193,7 +193,7 @@ export function TenantsPage() {
 function Th({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wide text-left ${className}`}
+      className={`px-4 py-2 text-xs font-medium text-ink-soft uppercase tracking-wide text-left ${className}`}
     >
       {children}
     </th>

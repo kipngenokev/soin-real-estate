@@ -49,14 +49,14 @@ export function LeasesPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-semibold text-gray-900">Leases</h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <h2 className="text-3xl font-semibold text-ink tracking-tight">Leases</h2>
+          <p className="text-sm text-ink-muted mt-1.5">
             Track lease lifecycle: create, activate, end.
           </p>
         </div>
         <button
           onClick={() => setFormOpen(true)}
-          className="px-3 py-2 text-sm font-medium rounded-md bg-slate-900 text-white hover:bg-slate-800"
+          className="px-3 py-2 text-sm font-medium rounded-md bg-brand-500 text-white hover:bg-brand-600"
         >
           + New lease
         </button>
@@ -70,7 +70,7 @@ export function LeasesPage() {
             className={`px-3 py-1 rounded ${
               filter === f.value
                 ? "bg-slate-900 text-white"
-                : "text-gray-700 hover:bg-gray-100"
+                : "text-ink-muted hover:bg-gray-100"
             }`}
           >
             {f.label}
@@ -84,8 +84,8 @@ export function LeasesPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
+      <div className="bg-white rounded-xl border border-gray-100 shadow-card overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-100">
           <thead className="bg-gray-50">
             <tr>
               <Th>Tenant</Th>
@@ -100,14 +100,14 @@ export function LeasesPage() {
           <tbody className="divide-y divide-gray-100 bg-white">
             {loading && (
               <tr>
-                <td colSpan={7} className="px-4 py-6 text-sm text-gray-500 text-center">
+                <td colSpan={7} className="px-4 py-6 text-sm text-ink-soft text-center">
                   Loading…
                 </td>
               </tr>
             )}
             {!loading && items.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-6 text-sm text-gray-500 text-center">
+                <td colSpan={7} className="px-4 py-6 text-sm text-ink-soft text-center">
                   No leases found.
                 </td>
               </tr>
@@ -118,33 +118,33 @@ export function LeasesPage() {
                   <td className="px-4 py-3 text-sm">
                     <Link
                       to={`/admin/leases/${l.id}`}
-                      className="font-medium text-slate-900 hover:underline"
+                      className="font-medium text-ink hover:text-brand-700"
                     >
                       {l.tenant?.user?.fullName ?? `Tenant #${l.tenantId}`}
                     </Link>
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-700">
+                  <td className="px-4 py-3 text-sm text-ink-muted">
                     {l.unit?.property?.name ?? "—"} · {l.unit?.label ?? "—"}
                   </td>
                   <td className="px-4 py-3 text-sm">
                     <LeaseStatusBadge status={l.status} />
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-700">
+                  <td className="px-4 py-3 text-sm text-ink-muted">
                     {Number(l.monthlyRent).toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-500">
+                  <td className="px-4 py-3 text-sm text-ink-soft">
                     {l.startDate ? new Date(l.startDate).toLocaleDateString() : "—"}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-500">
+                  <td className="px-4 py-3 text-sm text-ink-soft">
                     {l.endDate ? new Date(l.endDate).toLocaleDateString() : "—"}
                   </td>
                   <td className="px-4 py-3 text-sm text-right">
                     <Link
                       to={`/admin/leases/${l.id}`}
-                      className="text-slate-700 hover:underline"
+                      className="text-ink-muted hover:text-brand-700 font-medium"
                     >
                       View
                     </Link>
@@ -167,7 +167,7 @@ export function LeasesPage() {
 function Th({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wide text-left ${className}`}
+      className={`px-4 py-2 text-xs font-medium text-ink-soft uppercase tracking-wide text-left ${className}`}
     >
       {children}
     </th>

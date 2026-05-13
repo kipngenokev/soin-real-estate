@@ -64,8 +64,8 @@ export function IssuesPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-2xl font-semibold text-gray-900">Maintenance issues</h2>
-        <p className="text-sm text-gray-500 mt-1">
+        <h2 className="text-3xl font-semibold text-ink tracking-tight">Maintenance issues</h2>
+        <p className="text-sm text-ink-muted mt-1.5">
           Issues reported by tenants. Mark as resolved when fixed.
         </p>
       </div>
@@ -79,7 +79,7 @@ export function IssuesPage() {
               className={`px-3 py-1 rounded ${
                 filter === f.value
                   ? "bg-slate-900 text-white"
-                  : "text-gray-700 hover:bg-gray-100"
+                  : "text-ink-muted hover:bg-gray-100"
               }`}
             >
               {f.label}
@@ -87,7 +87,7 @@ export function IssuesPage() {
           ))}
         </div>
         {filter === "OPEN" && !loading && (
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-ink-soft">
             {openCount} open issue{openCount === 1 ? "" : "s"}
           </span>
         )}
@@ -99,8 +99,8 @@ export function IssuesPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
+      <div className="bg-white rounded-xl border border-gray-100 shadow-card overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-100 text-sm">
           <thead className="bg-gray-50">
             <tr>
               <Th>Title</Th>
@@ -115,14 +115,14 @@ export function IssuesPage() {
           <tbody className="divide-y divide-gray-100 bg-white">
             {loading && (
               <tr>
-                <td colSpan={7} className="px-4 py-6 text-gray-500 text-center">
+                <td colSpan={7} className="px-4 py-6 text-ink-soft text-center">
                   Loading…
                 </td>
               </tr>
             )}
             {!loading && items.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-6 text-gray-500 text-center">
+                <td colSpan={7} className="px-4 py-6 text-ink-soft text-center">
                   No issues to show.
                 </td>
               </tr>
@@ -132,11 +132,11 @@ export function IssuesPage() {
                 <tr key={i.id} className="hover:bg-gray-50 align-top">
                   <td className="px-4 py-3">
                     <div className="font-medium text-gray-900">{i.title}</div>
-                    <p className="text-xs text-gray-500 mt-1 whitespace-pre-line line-clamp-3">
+                    <p className="text-xs text-ink-soft mt-1 whitespace-pre-line line-clamp-3">
                       {i.description}
                     </p>
                   </td>
-                  <td className="px-4 py-3 text-gray-700">
+                  <td className="px-4 py-3 text-ink-muted">
                     {i.tenant ? (
                       <Link
                         to={`/admin/tenants/${i.tenantId}`}
@@ -148,7 +148,7 @@ export function IssuesPage() {
                       `#${i.tenantId}`
                     )}
                   </td>
-                  <td className="px-4 py-3 text-gray-700">
+                  <td className="px-4 py-3 text-ink-muted">
                     {i.unit?.property ? (
                       <Link
                         to={`/admin/properties/${i.unit.propertyId}`}
@@ -163,10 +163,10 @@ export function IssuesPage() {
                   <td className="px-4 py-3">
                     <StatusBadge status={i.status} />
                   </td>
-                  <td className="px-4 py-3 text-gray-500">
+                  <td className="px-4 py-3 text-ink-soft">
                     {new Date(i.createdAt).toLocaleDateString()}
                   </td>
-                  <td className="px-4 py-3 text-gray-500">
+                  <td className="px-4 py-3 text-ink-soft">
                     {i.resolvedAt ? new Date(i.resolvedAt).toLocaleDateString() : "—"}
                   </td>
                   <td className="px-4 py-3 text-right">
@@ -192,7 +192,7 @@ export function IssuesPage() {
 function Th({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wide text-left ${className}`}
+      className={`px-4 py-2 text-xs font-medium text-ink-soft uppercase tracking-wide text-left ${className}`}
     >
       {children}
     </th>

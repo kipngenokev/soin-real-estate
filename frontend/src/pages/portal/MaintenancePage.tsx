@@ -65,8 +65,8 @@ export function MaintenancePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold text-gray-900">Maintenance</h2>
-        <p className="text-sm text-gray-500 mt-1">
+        <h2 className="text-3xl font-semibold text-ink tracking-tight">Maintenance</h2>
+        <p className="text-sm text-ink-muted mt-1.5">
           Report a problem with your unit. We'll get back to you once it's been looked at.
         </p>
       </div>
@@ -75,25 +75,25 @@ export function MaintenancePage() {
         <h3 className="text-lg font-semibold text-gray-900">Report a new issue</h3>
         <form onSubmit={onSubmit} className="mt-4 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Title</label>
+            <label className="block text-sm font-medium text-ink-muted">Title</label>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Leaking kitchen tap"
               maxLength={120}
               required
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Description</label>
+            <label className="block text-sm font-medium text-ink-muted">Description</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={4}
               placeholder="Describe the issue with as much detail as you can…"
               required
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
             />
           </div>
 
@@ -111,7 +111,7 @@ export function MaintenancePage() {
           <button
             type="submit"
             disabled={submitting}
-            className="px-3 py-2 text-sm font-medium rounded-md bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-60"
+            className="px-3 py-2 text-sm font-medium rounded-md bg-brand-500 text-white hover:bg-brand-600 disabled:opacity-60"
           >
             {submitting ? "Submitting…" : "Submit issue"}
           </button>
@@ -127,9 +127,9 @@ export function MaintenancePage() {
         )}
 
         {loading ? (
-          <p className="mt-4 text-sm text-gray-500">Loading…</p>
+          <p className="mt-4 text-sm text-ink-soft">Loading…</p>
         ) : items.length === 0 ? (
-          <p className="mt-4 text-sm text-gray-500">You haven't reported any issues yet.</p>
+          <p className="mt-4 text-sm text-ink-soft">You haven't reported any issues yet.</p>
         ) : (
           <div className="mt-4 space-y-3">
             {items.map((i) => (
@@ -139,10 +139,10 @@ export function MaintenancePage() {
               >
                 <div className="min-w-0">
                   <div className="font-medium text-gray-900">{i.title}</div>
-                  <p className="mt-1 text-sm text-gray-700 whitespace-pre-line">
+                  <p className="mt-1 text-sm text-ink-muted whitespace-pre-line">
                     {i.description}
                   </p>
-                  <div className="mt-2 text-xs text-gray-500">
+                  <div className="mt-2 text-xs text-ink-soft">
                     Reported {new Date(i.createdAt).toLocaleDateString()}
                     {i.resolvedAt && (
                       <> · Resolved {new Date(i.resolvedAt).toLocaleDateString()}</>

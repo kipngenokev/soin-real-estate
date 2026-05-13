@@ -65,8 +65,8 @@ export function PropertiesPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-semibold text-gray-900">Properties</h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <h2 className="text-3xl font-semibold text-ink tracking-tight">Properties</h2>
+          <p className="text-sm text-ink-muted mt-1.5">
             Manage buildings and their units.
           </p>
         </div>
@@ -75,7 +75,7 @@ export function PropertiesPage() {
             setEditing(null);
             setFormOpen(true);
           }}
-          className="px-3 py-2 text-sm font-medium rounded-md bg-slate-900 text-white hover:bg-slate-800"
+          className="px-3 py-2 text-sm font-medium rounded-md bg-brand-500 text-white hover:bg-brand-600"
         >
           + New property
         </button>
@@ -87,8 +87,8 @@ export function PropertiesPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
+      <div className="bg-white rounded-xl border border-gray-100 shadow-card overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-100">
           <thead className="bg-gray-50">
             <tr>
               <Th>Name</Th>
@@ -101,14 +101,14 @@ export function PropertiesPage() {
           <tbody className="divide-y divide-gray-100 bg-white">
             {loading && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-sm text-gray-500 text-center">
+                <td colSpan={5} className="px-4 py-6 text-sm text-ink-soft text-center">
                   Loading…
                 </td>
               </tr>
             )}
             {!loading && items.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-sm text-gray-500 text-center">
+                <td colSpan={5} className="px-4 py-6 text-sm text-ink-soft text-center">
                   No properties yet. Click <strong>New property</strong> to add one.
                 </td>
               </tr>
@@ -119,14 +119,14 @@ export function PropertiesPage() {
                   <td className="px-4 py-3 text-sm">
                     <Link
                       to={`/admin/properties/${p.id}`}
-                      className="font-medium text-slate-900 hover:underline"
+                      className="font-medium text-ink hover:text-brand-700"
                     >
                       {p.name}
                     </Link>
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{p.location}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{p._count?.units ?? 0}</td>
-                  <td className="px-4 py-3 text-sm text-gray-500">
+                  <td className="px-4 py-3 text-sm text-ink-muted">{p.location}</td>
+                  <td className="px-4 py-3 text-sm text-ink-muted">{p._count?.units ?? 0}</td>
+                  <td className="px-4 py-3 text-sm text-ink-soft">
                     {new Date(p.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3 text-sm text-right space-x-3">
@@ -135,7 +135,7 @@ export function PropertiesPage() {
                         setEditing(p);
                         setFormOpen(true);
                       }}
-                      className="text-slate-700 hover:underline"
+                      className="text-ink-muted hover:text-brand-700 font-medium"
                     >
                       Edit
                     </button>
@@ -178,7 +178,7 @@ export function PropertiesPage() {
 function Th({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wide text-left ${className}`}
+      className={`px-4 py-2 text-xs font-medium text-ink-soft uppercase tracking-wide text-left ${className}`}
     >
       {children}
     </th>

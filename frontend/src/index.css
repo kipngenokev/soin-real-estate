@@ -2,11 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body, #root {
-  height: 100%;
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    /* Direct CSS — avoids @apply on custom theme tokens so a stale
+       Tailwind config cache can't break the dev server. */
+    background-color: #f7f8f4; /* surface.subtle */
+    color: #0f172a; /* ink.DEFAULT */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
 }
 
-body {
-  @apply bg-gray-50 text-gray-900 antialiased;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-semibold
+      text-white shadow-sm
+      focus:outline-none
+      disabled:opacity-60 disabled:cursor-not-allowed
+      transition-colors;
+    background-color: #14a800;
+  }
+  .btn-primary:hover {
+    background-color: #108a00;
+  }
+  .btn-primary:active {
+    background-color: #0d6e00;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium
+      bg-white border border-gray-200
+      hover:bg-gray-50 hover:border-gray-300
+      focus:outline-none
+      transition-colors;
+    color: #0f172a;
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-semibold
+      bg-red-600 text-white shadow-sm
+      hover:bg-red-700
+      focus:outline-none focus:ring-2 focus:ring-red-400/30
+      disabled:opacity-60 transition-colors;
+  }
 }

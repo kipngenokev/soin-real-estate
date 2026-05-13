@@ -91,7 +91,7 @@ export function LeaseFormModal({ open, lockedTenantId, onClose, onCreated }: Pro
             type="submit"
             form="lease-form"
             disabled={submitting || !tenantId || !unitId}
-            className="px-3 py-1.5 text-sm rounded-md bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-60"
+            className="px-3 py-1.5 text-sm rounded-md bg-brand-500 text-white hover:bg-brand-600 disabled:opacity-60"
           >
             {submitting ? "Creating…" : "Create lease"}
           </button>
@@ -106,7 +106,7 @@ export function LeaseFormModal({ open, lockedTenantId, onClose, onCreated }: Pro
               value={tenantId}
               onChange={(e) => setTenantId(e.target.value === "" ? "" : Number(e.target.value))}
               disabled={loading}
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
             >
               <option value="">
                 {loading
@@ -130,7 +130,7 @@ export function LeaseFormModal({ open, lockedTenantId, onClose, onCreated }: Pro
             value={unitId}
             onChange={(e) => setUnitId(e.target.value === "" ? "" : Number(e.target.value))}
             disabled={loading}
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500"
           >
             <option value="">
               {loading
