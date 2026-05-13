@@ -10,6 +10,8 @@ import { ConfirmDialog } from "../../components/ui/ConfirmDialog";
 import { LeaseStatusBadge } from "../../components/leases/LeaseStatusBadge";
 import { PaymentMethodBadge } from "../../components/payments/PaymentMethodBadge";
 import { PaymentFormModal } from "../../components/payments/PaymentFormModal";
+import { PageHeader } from "../../components/ui/PageHeader";
+import { Avatar } from "../../components/ui/Avatar";
 
 export function TenantDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -96,26 +98,10 @@ export function TenantDetailPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <Link to="/admin/tenants" className="text-sm text-slate-600 hover:underline">
+      <div>
+        <Link to="/admin/tenants" className="text-sm text-ink-muted hover:text-brand-600">
           ← Back to tenants
         </Link>
-        {tenant && (
-          <div className="space-x-2">
-            <button
-              onClick={() => setEditOpen(true)}
-              className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
-            >
-              Edit profile
-            </button>
-            <button
-              onClick={() => setDeleting(true)}
-              className="px-3 py-1.5 text-sm rounded-md border border-red-300 text-red-700 hover:bg-red-50"
-            >
-              Delete tenant
-            </button>
-          </div>
-        )}
       </div>
 
       {error && (
@@ -125,14 +111,32 @@ export function TenantDetailPage() {
       )}
 
       {loading && !tenant ? (
-        <div className="text-sm text-gray-500">Loading…</div>
+        <div className="text-sm text-ink-soft">Loading…</div>
       ) : tenant ? (
         <>
-          <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
-            <h2 className="text-2xl font-semibold text-gray-900">{tenant.user.fullName}</h2>
-            <p className="text-sm text-gray-500 mt-1">{tenant.user.email}</p>
+          <PageHeader
+            eyebrow="Tenant"
+            title={
+              <span className="inline-flex items-center gap-3">
+                <Avatar name={tenant.user.fullName} tone="violet" size="lg" />
+                {tenant.user.fullName}
+              </span>
+            }
+            subtitle={tenant.user.email}
+            actions={
+              <>
+                <button onClick={() => setEditOpen(true)} className="btn-ghost">
+                  Edit profile
+                </button>
+                <button onClick={() => setDeleting(true)} className="btn-danger">
+                  Delete tenant
+                </button>
+              </>
+            }
+          />
 
-            <dl className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+          <div className="bg-white rounded-lg border border-gray-200 p-5">
+            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
               <Row label="Phone">{tenant.phone ?? "—"}</Row>
               <Row label="National ID">{tenant.nationalId ?? "—"}</Row>
               <Row label="Emergency contact">{tenant.emergencyContact ?? "—"}</Row>
@@ -143,21 +147,15 @@ export function TenantDetailPage() {
             </dl>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
+          <div className="bg-white rounded-lg border border-gray-200 p-5">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">Current assignment</h3>
+              <h3 className="text-lg font-semibold text-ink">Current assignment</h3>
               {lease ? (
-                <button
-                  onClick={() => setEndingLease(true)}
-                  className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
-                >
+                <button onClick={() => setEndingLease(true)} className="btn-ghost">
                   End lease
                 </button>
               ) : (
-                <button
-                  onClick={() => setAssignOpen(true)}
-                  className="px-3 py-1.5 text-sm rounded-md bg-slate-900 text-white hover:bg-slate-800"
-                >
+                <button onClick={() => setAssignOpen(true)} className="btn-primary">
                   Assign to unit
                 </button>
               )}
@@ -179,28 +177,28 @@ export function TenantDetailPage() {
                 <Row label="Lease">
                   <Link
                     to={`/admin/leases/${lease.id}`}
-                    className="text-slate-900 hover:underline"
+                    className="text-ink hover:text-brand-600 hover:underline"
                   >
                     #{lease.id}
                   </Link>
                 </Row>
               </dl>
             ) : (
-              <p className="text-sm text-gray-500 mt-3">
+              <p className="text-sm text-ink-soft mt-3">
                 This tenant is not currently assigned to a unit.
               </p>
             )}
           </div>
 
           {paymentsView && (
-            <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
+            <div className="bg-white rounded-lg border border-gray-200 p-5">
               <div className="flex items-center justify-between gap-3">
-                <h3 className="text-lg font-semibold text-gray-900">Payments &amp; balance</h3>
+                <h3 className="text-lg font-semibold text-ink">Payments &amp; balance</h3>
                 <button
                   onClick={() => setPaymentOpen(true)}
                   disabled={!lease}
                   title={!lease ? "Tenant must have an active lease" : undefined}
-                  className="px-3 py-1.5 text-sm rounded-md bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-60"
+                  className="btn-primary"
                 >
                   + Record payment
                 </button>
@@ -231,11 +229,11 @@ export function TenantDetailPage() {
               </div>
 
               {paymentsView.payments.length === 0 ? (
-                <p className="mt-4 text-sm text-gray-500">No payments recorded yet.</p>
+                <p className="mt-4 text-sm text-ink-soft">No payments recorded yet.</p>
               ) : (
                 <div className="mt-4 overflow-hidden rounded-md border border-gray-200">
-                  <table className="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
+                  <table className="min-w-full divide-y divide-gray-100 text-sm">
+                    <thead className="bg-gray-50 text-xs uppercase tracking-wide text-ink-soft">
                       <tr>
                         <th className="px-4 py-2 text-left font-medium">Paid on</th>
                         <th className="px-4 py-2 text-left font-medium">Method</th>
@@ -246,13 +244,13 @@ export function TenantDetailPage() {
                     <tbody className="divide-y divide-gray-100 bg-white">
                       {paymentsView.payments.map((p) => (
                         <tr key={p.id} className="hover:bg-gray-50">
-                          <td className="px-4 py-2 text-gray-700">
+                          <td className="px-4 py-2 text-ink-muted">
                             {new Date(p.paidAt).toLocaleDateString()}
                           </td>
                           <td className="px-4 py-2">
                             <PaymentMethodBadge method={p.method} />
                           </td>
-                          <td className="px-4 py-2 text-gray-700">{p.reference ?? "—"}</td>
+                          <td className="px-4 py-2 text-ink-muted">{p.reference ?? "—"}</td>
                           <td className="px-4 py-2 text-right font-semibold text-gray-900">
                             {Number(p.amount).toLocaleString(undefined, {
                               minimumFractionDigits: 2,
@@ -269,11 +267,11 @@ export function TenantDetailPage() {
           )}
 
           {history.length > 0 && (
-            <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900">Lease history</h3>
+            <div className="bg-white rounded-lg border border-gray-200 p-5">
+              <h3 className="text-lg font-semibold text-ink">Lease history</h3>
               <div className="mt-3 overflow-hidden rounded-md border border-gray-200">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
+                <table className="min-w-full divide-y divide-gray-100">
+                  <thead className="bg-gray-50 text-xs uppercase tracking-wide text-ink-soft">
                     <tr>
                       <th className="px-4 py-2 text-left font-medium">Lease</th>
                       <th className="px-4 py-2 text-left font-medium">Unit</th>
@@ -288,21 +286,21 @@ export function TenantDetailPage() {
                         <td className="px-4 py-2">
                           <Link
                             to={`/admin/leases/${h.id}`}
-                            className="text-slate-900 hover:underline"
+                            className="text-ink hover:text-brand-600 hover:underline"
                           >
                             #{h.id}
                           </Link>
                         </td>
-                        <td className="px-4 py-2 text-gray-700">
+                        <td className="px-4 py-2 text-ink-muted">
                           {h.unit?.property?.name ?? "—"} · {h.unit?.label ?? "—"}
                         </td>
                         <td className="px-4 py-2">
                           <LeaseStatusBadge status={h.status} />
                         </td>
-                        <td className="px-4 py-2 text-gray-500">
+                        <td className="px-4 py-2 text-ink-soft">
                           {h.startDate ? new Date(h.startDate).toLocaleDateString() : "—"}
                         </td>
-                        <td className="px-4 py-2 text-gray-500">
+                        <td className="px-4 py-2 text-ink-soft">
                           {h.endDate ? new Date(h.endDate).toLocaleDateString() : "—"}
                         </td>
                       </tr>
@@ -361,7 +359,7 @@ export function TenantDetailPage() {
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <>
-      <dt className="text-gray-500">{label}</dt>
+      <dt className="text-ink-soft">{label}</dt>
       <dd className="text-gray-900">{children}</dd>
     </>
   );
@@ -384,7 +382,7 @@ function SmallStat({
         : "text-gray-900";
   return (
     <div className="rounded-md border border-gray-200 p-3">
-      <div className="text-xs uppercase tracking-wide text-gray-500">{label}</div>
+      <div className="text-xs uppercase tracking-wide text-ink-soft">{label}</div>
       <div className={`text-lg font-semibold mt-1 ${valueClass}`}>{children}</div>
     </div>
   );

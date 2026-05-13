@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { AxiosError } from "axios";
 import { issuesApi } from "../../lib/api/issues";
 import type { Issue, IssueStatus } from "../../lib/types";
+import { PageHeader } from "../../components/ui/PageHeader";
+import { Pill } from "../../components/ui/Pill";
 
 const FILTERS: { value: IssueStatus | "ALL"; label: string }[] = [
   { value: "ALL", label: "All" },
@@ -62,13 +64,12 @@ export function IssuesPage() {
   const openCount = items.filter((i) => i.status === "OPEN").length;
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h2 className="text-2xl font-semibold text-gray-900">Maintenance issues</h2>
-        <p className="text-sm text-gray-500 mt-1">
-          Issues reported by tenants. Mark as resolved when fixed.
-        </p>
-      </div>
+    <div className="space-y-6">
+      <PageHeader
+        eyebrow="Operations"
+        title="Maintenance issues"
+        subtitle="Issues reported by tenants. Mark as resolved when fixed."
+      />
 
       <div className="flex items-center gap-3">
         <div className="inline-flex rounded-md border border-gray-300 bg-white p-0.5 text-sm">
@@ -78,8 +79,8 @@ export function IssuesPage() {
               onClick={() => setFilter(f.value)}
               className={`px-3 py-1 rounded ${
                 filter === f.value
-                  ? "bg-slate-900 text-white"
-                  : "text-gray-700 hover:bg-gray-100"
+                  ? "bg-ink text-white"
+                  : "text-ink-muted hover:bg-gray-100"
               }`}
             >
               {f.label}
@@ -87,7 +88,7 @@ export function IssuesPage() {
           ))}
         </div>
         {filter === "OPEN" && !loading && (
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-ink-soft">
             {openCount} open issue{openCount === 1 ? "" : "s"}
           </span>
         )}
@@ -99,8 +100,8 @@ export function IssuesPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
+      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-100 text-sm">
           <thead className="bg-gray-50">
             <tr>
               <Th>Title</Th>
@@ -115,14 +116,14 @@ export function IssuesPage() {
           <tbody className="divide-y divide-gray-100 bg-white">
             {loading && (
               <tr>
-                <td colSpan={7} className="px-4 py-6 text-gray-500 text-center">
+                <td colSpan={7} className="px-4 py-6 text-ink-soft text-center">
                   Loading…
                 </td>
               </tr>
             )}
             {!loading && items.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-6 text-gray-500 text-center">
+                <td colSpan={7} className="px-4 py-6 text-ink-soft text-center">
                   No issues to show.
                 </td>
               </tr>
@@ -132,15 +133,15 @@ export function IssuesPage() {
                 <tr key={i.id} className="hover:bg-gray-50 align-top">
                   <td className="px-4 py-3">
                     <div className="font-medium text-gray-900">{i.title}</div>
-                    <p className="text-xs text-gray-500 mt-1 whitespace-pre-line line-clamp-3">
+                    <p className="text-xs text-ink-soft mt-1 whitespace-pre-line line-clamp-3">
                       {i.description}
                     </p>
                   </td>
-                  <td className="px-4 py-3 text-gray-700">
+                  <td className="px-4 py-3 text-ink-muted">
                     {i.tenant ? (
                       <Link
                         to={`/admin/tenants/${i.tenantId}`}
-                        className="text-slate-900 hover:underline"
+                        className="text-ink hover:text-brand-600 hover:underline"
                       >
                         {i.tenant.user.fullName}
                       </Link>
@@ -148,11 +149,11 @@ export function IssuesPage() {
                       `#${i.tenantId}`
                     )}
                   </td>
-                  <td className="px-4 py-3 text-gray-700">
+                  <td className="px-4 py-3 text-ink-muted">
                     {i.unit?.property ? (
                       <Link
                         to={`/admin/properties/${i.unit.propertyId}`}
-                        className="text-slate-900 hover:underline"
+                        className="text-ink hover:text-brand-600 hover:underline"
                       >
                         {i.unit.property.name} · {i.unit.label}
                       </Link>
@@ -163,10 +164,10 @@ export function IssuesPage() {
                   <td className="px-4 py-3">
                     <StatusBadge status={i.status} />
                   </td>
-                  <td className="px-4 py-3 text-gray-500">
+                  <td className="px-4 py-3 text-ink-soft">
                     {new Date(i.createdAt).toLocaleDateString()}
                   </td>
-                  <td className="px-4 py-3 text-gray-500">
+                  <td className="px-4 py-3 text-ink-soft">
                     {i.resolvedAt ? new Date(i.resolvedAt).toLocaleDateString() : "—"}
                   </td>
                   <td className="px-4 py-3 text-right">
@@ -192,7 +193,7 @@ export function IssuesPage() {
 function Th({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wide text-left ${className}`}
+      className={`px-4 py-2 text-[11px] font-semibold text-ink-soft uppercase tracking-wider text-left ${className}`}
     >
       {children}
     </th>
@@ -200,13 +201,9 @@ function Th({ children, className = "" }: { children: React.ReactNode; className
 }
 
 function StatusBadge({ status }: { status: IssueStatus }) {
-  const cls =
-    status === "OPEN"
-      ? "bg-amber-50 text-amber-700 border-amber-200"
-      : "bg-emerald-50 text-emerald-700 border-emerald-200";
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full border text-xs ${cls}`}>
+    <Pill tone={status === "OPEN" ? "amber" : "emerald"}>
       {status === "OPEN" ? "Open" : "Resolved"}
-    </span>
+    </Pill>
   );
 }

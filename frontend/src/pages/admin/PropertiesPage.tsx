@@ -1,10 +1,22 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { AxiosError } from "axios";
 import { propertiesApi } from "../../lib/api/properties";
 import type { Property } from "../../lib/types";
 import { PropertyFormModal } from "../../components/properties/PropertyFormModal";
 import { ConfirmDialog } from "../../components/ui/ConfirmDialog";
+import { PageHeader } from "../../components/ui/PageHeader";
+import { StatTile } from "../../components/ui/StatTile";
+import { TONES } from "../../components/ui/tones";
+
+const BuildingIcon = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
+    strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+    <path d="M3 21h18" />
+    <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+    <path d="M9 7h.01M9 11h.01M9 15h.01M15 7h.01M15 11h.01M15 15h.01" />
+  </svg>
+);
 
 export function PropertiesPage() {
   const [items, setItems] = useState<Property[]>([]);
@@ -31,9 +43,13 @@ export function PropertiesPage() {
     }
   }, []);
 
-  useEffect(() => {
-    reload();
-  }, [reload]);
+  useEffect(() => { reload(); }, [reload]);
+
+  const totals = useMemo(() => {
+    const buildings = items.length;
+    const units = items.reduce((sum, p) => sum + (p._count?.units ?? 0), 0);
+    return { buildings, units };
+  }, [items]);
 
   function onSaved(p: Property) {
     setItems((prev) => {
@@ -62,24 +78,30 @@ export function PropertiesPage() {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-semibold text-gray-900">Properties</h2>
-          <p className="text-sm text-gray-500 mt-1">
-            Manage buildings and their units.
-          </p>
-        </div>
-        <button
-          onClick={() => {
-            setEditing(null);
-            setFormOpen(true);
-          }}
-          className="px-3 py-2 text-sm font-medium rounded-md bg-slate-900 text-white hover:bg-slate-800"
-        >
-          + New property
-        </button>
-      </div>
+    <div className="space-y-6">
+      <PageHeader
+        eyebrow="Portfolio"
+        title="Properties"
+        subtitle="Manage your buildings and the units inside them."
+        actions={
+          <button
+            onClick={() => { setEditing(null); setFormOpen(true); }}
+            className="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-md text-white bg-brand-500 hover:bg-brand-600 transition-colors"
+          >
+            + New property
+          </button>
+        }
+      />
+
+      <section className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <StatTile tone="indigo" icon={BuildingIcon} label="Total properties"
+                  value={loading ? "—" : totals.buildings} />
+        <StatTile tone="teal" icon={BuildingIcon} label="Total units"
+                  value={loading ? "—" : totals.units} />
+        <StatTile tone="violet" icon={BuildingIcon} label="Average units / property"
+                  value={loading ? "—" : totals.buildings === 0
+                    ? 0 : (totals.units / totals.buildings).toFixed(1)} />
+      </section>
 
       {error && (
         <div className="rounded-md bg-red-50 border border-red-200 px-3 py-2 text-sm text-red-700">
@@ -87,86 +109,77 @@ export function PropertiesPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <section className="rounded-2xl border border-gray-200 bg-white overflow-hidden">
+        <div className="px-5 py-4 border-b border-gray-100">
+          <h3 className="text-sm font-semibold text-ink">All properties</h3>
+        </div>
+        <table className="min-w-full divide-y divide-gray-100">
+          <thead className="bg-gray-50/60">
             <tr>
-              <Th>Name</Th>
+              <Th>Property</Th>
               <Th>Location</Th>
-              <Th>Units</Th>
+              <Th className="text-right">Units</Th>
               <Th>Created</Th>
               <Th className="text-right">Actions</Th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 bg-white">
             {loading && (
-              <tr>
-                <td colSpan={5} className="px-4 py-6 text-sm text-gray-500 text-center">
-                  Loading…
-                </td>
-              </tr>
+              <tr><td colSpan={5} className="px-5 py-8 text-sm text-ink-soft text-center">Loading…</td></tr>
             )}
             {!loading && items.length === 0 && (
-              <tr>
-                <td colSpan={5} className="px-4 py-6 text-sm text-gray-500 text-center">
-                  No properties yet. Click <strong>New property</strong> to add one.
-                </td>
-              </tr>
+              <tr><td colSpan={5} className="px-5 py-8 text-sm text-ink-soft text-center">
+                No properties yet. Click <strong>New property</strong> to add one.
+              </td></tr>
             )}
-            {!loading &&
-              items.map((p) => (
-                <tr key={p.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-sm">
+            {!loading && items.map((p) => (
+              <tr key={p.id} className="hover:bg-gray-50/60 transition-colors">
+                <td className="px-5 py-3.5">
+                  <div className="flex items-center gap-3">
+                    <span className="h-9 w-9 rounded-lg flex items-center justify-center"
+                          style={{ backgroundColor: TONES.indigo.bg, color: TONES.indigo.fg }}>
+                      {BuildingIcon}
+                    </span>
                     <Link
                       to={`/admin/properties/${p.id}`}
-                      className="font-medium text-slate-900 hover:underline"
+                      className="font-medium text-ink hover:text-brand-600"
                     >
                       {p.name}
                     </Link>
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{p.location}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{p._count?.units ?? 0}</td>
-                  <td className="px-4 py-3 text-sm text-gray-500">
-                    {new Date(p.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-right space-x-3">
-                    <button
-                      onClick={() => {
-                        setEditing(p);
-                        setFormOpen(true);
-                      }}
-                      className="text-slate-700 hover:underline"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => setDeleting(p)}
-                      className="text-red-600 hover:underline"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                  </div>
+                </td>
+                <td className="px-5 py-3.5 text-sm text-ink-muted">{p.location}</td>
+                <td className="px-5 py-3.5 text-sm text-right text-ink tabular-nums font-medium">
+                  {p._count?.units ?? 0}
+                </td>
+                <td className="px-5 py-3.5 text-sm text-ink-soft">
+                  {new Date(p.createdAt).toLocaleDateString()}
+                </td>
+                <td className="px-5 py-3.5 text-sm text-right space-x-3">
+                  <button onClick={() => { setEditing(p); setFormOpen(true); }}
+                          className="text-ink-muted hover:text-brand-600 font-medium">
+                    Edit
+                  </button>
+                  <button onClick={() => setDeleting(p)}
+                          className="text-red-600 hover:text-red-700 font-medium">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
-      </div>
+      </section>
 
-      <PropertyFormModal
-        open={formOpen}
-        initial={editing}
-        onClose={() => setFormOpen(false)}
-        onSaved={onSaved}
-      />
+      <PropertyFormModal open={formOpen} initial={editing}
+        onClose={() => setFormOpen(false)} onSaved={onSaved} />
 
       <ConfirmDialog
         open={Boolean(deleting)}
         title="Delete property"
-        message={
-          deleting
-            ? `Delete "${deleting.name}"? This will also remove all of its units. This cannot be undone.`
-            : ""
-        }
+        message={deleting
+          ? `Delete "${deleting.name}"? This will also remove all of its units. This cannot be undone.`
+          : ""}
         onCancel={() => setDeleting(null)}
         onConfirm={confirmDelete}
         busy={deleteBusy}
@@ -177,9 +190,7 @@ export function PropertiesPage() {
 
 function Th({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <th
-      className={`px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wide text-left ${className}`}
-    >
+    <th className={`px-5 py-2.5 text-[10.5px] font-semibold text-ink-soft uppercase tracking-wider text-left ${className}`}>
       {children}
     </th>
   );

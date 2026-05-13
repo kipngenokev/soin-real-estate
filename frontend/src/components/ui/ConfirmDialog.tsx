@@ -31,7 +31,7 @@ export function ConfirmDialog({
             type="button"
             onClick={onCancel}
             disabled={busy}
-            className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
+            className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-ink-muted hover:bg-gray-100"
           >
             Cancel
           </button>
@@ -46,7 +46,7 @@ export function ConfirmDialog({
         </>
       }
     >
-      <p className="text-sm text-gray-700">{message}</p>
+      <p className="text-sm text-ink-muted">{message}</p>
     </Modal>
   );
 }

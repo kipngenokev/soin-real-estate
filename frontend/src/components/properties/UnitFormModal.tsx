@@ -91,7 +91,7 @@ export function UnitFormModal({ open, propertyId, initial, onClose, onSaved }: P
             type="button"
             onClick={onClose}
             disabled={submitting}
-            className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
+            className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-ink-muted hover:bg-gray-100"
           >
             Cancel
           </button>
@@ -99,7 +99,7 @@ export function UnitFormModal({ open, propertyId, initial, onClose, onSaved }: P
             type="submit"
             form="unit-form"
             disabled={submitting}
-            className="px-3 py-1.5 text-sm rounded-md bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-60"
+            className="px-3 py-1.5 text-sm rounded-md bg-brand-500 text-white hover:bg-brand-600 disabled:opacity-60"
           >
             {submitting ? "Saving…" : initial ? "Save changes" : "Create unit"}
           </button>
@@ -108,34 +108,34 @@ export function UnitFormModal({ open, propertyId, initial, onClose, onSaved }: P
     >
       <form id="unit-form" onSubmit={onSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Label</label>
+          <label className="block text-sm font-medium text-ink-muted">Label</label>
           <input
             value={form.label}
             onChange={(e) => setForm({ ...form, label: e.target.value })}
             placeholder="e.g. A1"
             required
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Type</label>
+            <label className="block text-sm font-medium text-ink-muted">Type</label>
             <select
               value={form.type}
               onChange={(e) => setForm({ ...form, type: e.target.value as UnitType })}
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
             >
               <option value="STUDIO">Studio</option>
               <option value="ONE_BEDROOM">One bedroom</option>
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Status</label>
+            <label className="block text-sm font-medium text-ink-muted">Status</label>
             <select
               value={form.status}
               onChange={(e) => setForm({ ...form, status: e.target.value as UnitStatus })}
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
             >
               <option value="AVAILABLE">Available</option>
               <option value="OCCUPIED">Occupied</option>
@@ -144,7 +144,7 @@ export function UnitFormModal({ open, propertyId, initial, onClose, onSaved }: P
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Rent amount</label>
+          <label className="block text-sm font-medium text-ink-muted">Rent amount</label>
           <input
             type="number"
             step="0.01"
@@ -152,7 +152,7 @@ export function UnitFormModal({ open, propertyId, initial, onClose, onSaved }: P
             value={form.rentAmount}
             onChange={(e) => setForm({ ...form, rentAmount: e.target.value })}
             required
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
           />
         </div>
 

@@ -83,7 +83,7 @@ export function LeaseFormModal({ open, lockedTenantId, onClose, onCreated }: Pro
             type="button"
             onClick={onClose}
             disabled={submitting}
-            className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
+            className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-ink-muted hover:bg-gray-100"
           >
             Cancel
           </button>
@@ -91,7 +91,7 @@ export function LeaseFormModal({ open, lockedTenantId, onClose, onCreated }: Pro
             type="submit"
             form="lease-form"
             disabled={submitting || !tenantId || !unitId}
-            className="px-3 py-1.5 text-sm rounded-md bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-60"
+            className="px-3 py-1.5 text-sm rounded-md bg-brand-500 text-white hover:bg-brand-600 disabled:opacity-60"
           >
             {submitting ? "Creating…" : "Create lease"}
           </button>
@@ -101,12 +101,12 @@ export function LeaseFormModal({ open, lockedTenantId, onClose, onCreated }: Pro
       <form id="lease-form" onSubmit={onSubmit} className="space-y-4">
         {!lockedTenantId && (
           <div>
-            <label className="block text-sm font-medium text-gray-700">Tenant</label>
+            <label className="block text-sm font-medium text-ink-muted">Tenant</label>
             <select
               value={tenantId}
               onChange={(e) => setTenantId(e.target.value === "" ? "" : Number(e.target.value))}
               disabled={loading}
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
             >
               <option value="">
                 {loading
@@ -125,12 +125,12 @@ export function LeaseFormModal({ open, lockedTenantId, onClose, onCreated }: Pro
         )}
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Available unit</label>
+          <label className="block text-sm font-medium text-ink-muted">Available unit</label>
           <select
             value={unitId}
             onChange={(e) => setUnitId(e.target.value === "" ? "" : Number(e.target.value))}
             disabled={loading}
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
           >
             <option value="">
               {loading
@@ -150,7 +150,7 @@ export function LeaseFormModal({ open, lockedTenantId, onClose, onCreated }: Pro
               </option>
             ))}
           </select>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-ink-soft mt-1">
             The lease is created as <strong>DRAFT</strong>. Activate it from the lease detail
             page to mark the unit occupied.
           </p>

@@ -1,21 +1,19 @@
 import type { PaymentMethod } from "../../lib/types";
+import { Pill } from "../ui/Pill";
+import type { Tone } from "../ui/tones";
 
-const cls: Record<PaymentMethod, string> = {
-  CASH: "bg-amber-50 text-amber-700 border-amber-200",
-  BANK: "bg-sky-50 text-sky-700 border-sky-200",
-  MPESA: "bg-emerald-50 text-emerald-700 border-emerald-200",
+const TONE: Record<PaymentMethod, Tone> = {
+  CASH: "amber",
+  BANK: "blue",
+  MPESA: "emerald",
 };
 
-const label: Record<PaymentMethod, string> = {
+const LABEL: Record<PaymentMethod, string> = {
   CASH: "Cash",
   BANK: "Bank",
   MPESA: "M-Pesa",
 };
 
 export function PaymentMethodBadge({ method }: { method: PaymentMethod }) {
-  return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full border text-xs ${cls[method]}`}>
-      {label[method]}
-    </span>
-  );
+  return <Pill tone={TONE[method]}>{LABEL[method]}</Pill>;
 }

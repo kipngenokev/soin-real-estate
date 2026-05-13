@@ -132,7 +132,7 @@ export function PropertyFormModal({ open, initial, onClose, onSaved }: Props) {
             type="button"
             onClick={onClose}
             disabled={submitting}
-            className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
+            className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-ink-muted hover:bg-gray-100"
           >
             Cancel
           </button>
@@ -140,7 +140,7 @@ export function PropertyFormModal({ open, initial, onClose, onSaved }: Props) {
             type="submit"
             form="property-form"
             disabled={submitting}
-            className="px-3 py-1.5 text-sm rounded-md bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-60"
+            className="px-3 py-1.5 text-sm rounded-md bg-brand-500 text-white hover:bg-brand-600 disabled:opacity-60"
           >
             {submitting
               ? "Saving…"
@@ -155,30 +155,30 @@ export function PropertyFormModal({ open, initial, onClose, onSaved }: Props) {
     >
       <form id="property-form" onSubmit={onSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Name</label>
+          <label className="block text-sm font-medium text-ink-muted">Name</label>
           <input
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             required
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Location</label>
+          <label className="block text-sm font-medium text-ink-muted">Location</label>
           <input
             value={form.location}
             onChange={(e) => setForm({ ...form, location: e.target.value })}
             required
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Description</label>
+          <label className="block text-sm font-medium text-ink-muted">Description</label>
           <textarea
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
             rows={3}
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
           />
         </div>
 
@@ -186,17 +186,17 @@ export function PropertyFormModal({ open, initial, onClose, onSaved }: Props) {
           <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
             <div className="flex items-baseline justify-between">
               <h4 className="text-sm font-semibold text-gray-900">Units in this property</h4>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-ink-soft">
                 Leave as 0 to add units later.
               </span>
             </div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-ink-soft mt-1">
               Each unit is auto-labelled (Studios become <code>S1, S2…</code>; one-bedrooms become{" "}
               <code>B1, B2…</code>) and starts as <strong>Available</strong>.
             </p>
 
             <div className="mt-3 space-y-2">
-              <div className="grid grid-cols-12 gap-2 text-xs font-medium text-gray-500 uppercase tracking-wide px-1">
+              <div className="grid grid-cols-12 gap-2 text-xs font-medium text-ink-soft uppercase tracking-wide px-1">
                 <div className="col-span-5">Type</div>
                 <div className="col-span-3">How many</div>
                 <div className="col-span-4">Monthly rent</div>
@@ -211,7 +211,7 @@ export function PropertyFormModal({ open, initial, onClose, onSaved }: Props) {
                       step={1}
                       value={g.count}
                       onChange={(e) => updateGroup(idx, { count: e.target.value })}
-                      className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500"
+                      className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
                     />
                   </div>
                   <div className="col-span-4">
@@ -223,7 +223,7 @@ export function PropertyFormModal({ open, initial, onClose, onSaved }: Props) {
                       value={g.rentAmount}
                       onChange={(e) => updateGroup(idx, { rentAmount: e.target.value })}
                       disabled={Number(g.count || "0") <= 0}
-                      className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500 disabled:bg-gray-100"
+                      className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 disabled:bg-gray-100"
                     />
                   </div>
                 </div>

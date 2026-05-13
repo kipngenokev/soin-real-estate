@@ -6,6 +6,8 @@ import { unitsApi } from "../../lib/api/units";
 import type { Property, Unit, UnitStatus } from "../../lib/types";
 import { UnitFormModal } from "../../components/properties/UnitFormModal";
 import { ConfirmDialog } from "../../components/ui/ConfirmDialog";
+import { PageHeader } from "../../components/ui/PageHeader";
+import { Pill } from "../../components/ui/Pill";
 
 const typeLabel: Record<Unit["type"], string> = {
   STUDIO: "Studio",
@@ -99,7 +101,7 @@ export function PropertyDetailPage() {
   return (
     <div className="space-y-6">
       <div>
-        <Link to="/admin/properties" className="text-sm text-slate-600 hover:underline">
+        <Link to="/admin/properties" className="text-sm text-ink-muted hover:text-brand-600">
           ← Back to properties
         </Link>
       </div>
@@ -111,38 +113,42 @@ export function PropertyDetailPage() {
       )}
 
       {loading && !property ? (
-        <div className="text-sm text-gray-500">Loading…</div>
+        <div className="text-sm text-ink-soft">Loading…</div>
       ) : property ? (
         <>
-          <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
-            <h2 className="text-2xl font-semibold text-gray-900">{property.name}</h2>
-            <p className="text-sm text-gray-500 mt-1">{property.location}</p>
-            {property.description && (
-              <p className="text-sm text-gray-700 mt-3 whitespace-pre-line">
+          <PageHeader
+            eyebrow="Property"
+            title={property.name}
+            subtitle={property.location}
+          />
+
+          {property.description && (
+            <div className="bg-white rounded-lg border border-gray-200 p-5">
+              <p className="text-sm text-ink-muted whitespace-pre-line">
                 {property.description}
               </p>
-            )}
-            <div className="mt-4 text-xs text-gray-500">
-              {property._count?.units ?? units.length} unit
-              {(property._count?.units ?? units.length) === 1 ? "" : "s"}
+              <div className="mt-4 text-xs text-ink-soft">
+                {property._count?.units ?? units.length} unit
+                {(property._count?.units ?? units.length) === 1 ? "" : "s"}
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900">Units</h3>
+            <h3 className="text-lg font-semibold text-ink">Units</h3>
             <button
               onClick={() => {
                 setEditingUnit(null);
                 setUnitFormOpen(true);
               }}
-              className="px-3 py-2 text-sm font-medium rounded-md bg-slate-900 text-white hover:bg-slate-800"
+              className="btn-primary"
             >
               + New unit
             </button>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <table className="min-w-full divide-y divide-gray-100">
               <thead className="bg-gray-50">
                 <tr>
                   <Th>Label</Th>
@@ -155,7 +161,7 @@ export function PropertyDetailPage() {
               <tbody className="divide-y divide-gray-100 bg-white">
                 {units.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="px-4 py-6 text-sm text-gray-500 text-center">
+                    <td colSpan={5} className="px-4 py-6 text-sm text-ink-soft text-center">
                       No units yet.
                     </td>
                   </tr>
@@ -163,8 +169,8 @@ export function PropertyDetailPage() {
                 {units.map((u) => (
                   <tr key={u.id} className="hover:bg-gray-50">
                     <td className="px-4 py-3 text-sm font-medium text-gray-900">{u.label}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">{typeLabel[u.type]}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">
+                    <td className="px-4 py-3 text-sm text-ink-muted">{typeLabel[u.type]}</td>
+                    <td className="px-4 py-3 text-sm text-ink-muted">
                       {Number(u.rentAmount).toLocaleString(undefined, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
@@ -176,7 +182,7 @@ export function PropertyDetailPage() {
                     <td className="px-4 py-3 text-sm text-right space-x-3">
                       <button
                         onClick={() => onToggleStatus(u)}
-                        className="text-slate-700 hover:underline"
+                        className="text-ink-muted hover:text-brand-600 font-medium"
                       >
                         Mark {u.status === "AVAILABLE" ? "occupied" : "available"}
                       </button>
@@ -185,7 +191,7 @@ export function PropertyDetailPage() {
                           setEditingUnit(u);
                           setUnitFormOpen(true);
                         }}
-                        className="text-slate-700 hover:underline"
+                        className="text-ink-muted hover:text-brand-600 font-medium"
                       >
                         Edit
                       </button>
@@ -203,11 +209,11 @@ export function PropertyDetailPage() {
           </div>
         </>
       ) : (
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-ink-soft">
           Property not found.{" "}
           <button
             onClick={() => navigate("/admin/properties")}
-            className="text-slate-700 hover:underline"
+            className="text-ink-muted hover:text-brand-600 font-medium"
           >
             Go back
           </button>
@@ -237,7 +243,7 @@ export function PropertyDetailPage() {
 function Th({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wide text-left ${className}`}
+      className={`px-4 py-2 text-[11px] font-semibold text-ink-soft uppercase tracking-wider text-left ${className}`}
     >
       {children}
     </th>
@@ -245,13 +251,9 @@ function Th({ children, className = "" }: { children: React.ReactNode; className
 }
 
 function StatusBadge({ status }: { status: UnitStatus }) {
-  const cls =
-    status === "AVAILABLE"
-      ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-      : "bg-amber-50 text-amber-700 border-amber-200";
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full border text-xs ${cls}`}>
+    <Pill tone={status === "AVAILABLE" ? "emerald" : "amber"}>
       {status === "AVAILABLE" ? "Available" : "Occupied"}
-    </span>
+    </Pill>
   );
 }

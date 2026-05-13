@@ -5,6 +5,7 @@ import { leasesApi } from "../../lib/api/leases";
 import type { LeaseDetail } from "../../lib/types";
 import { LeaseStatusBadge } from "../../components/leases/LeaseStatusBadge";
 import { ConfirmDialog } from "../../components/ui/ConfirmDialog";
+import { PageHeader } from "../../components/ui/PageHeader";
 
 export function LeaseDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -96,39 +97,10 @@ export function LeaseDetailPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <Link to="/admin/leases" className="text-sm text-slate-600 hover:underline">
+      <div>
+        <Link to="/admin/leases" className="text-sm text-ink-muted hover:text-brand-600">
           ← Back to leases
         </Link>
-        {lease && (
-          <div className="space-x-2">
-            {lease.status === "DRAFT" && (
-              <>
-                <button
-                  onClick={onActivate}
-                  disabled={activating}
-                  className="px-3 py-1.5 text-sm rounded-md bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-60"
-                >
-                  {activating ? "Activating…" : "Activate"}
-                </button>
-                <button
-                  onClick={() => setDeletingOpen(true)}
-                  className="px-3 py-1.5 text-sm rounded-md border border-red-300 text-red-700 hover:bg-red-50"
-                >
-                  Delete draft
-                </button>
-              </>
-            )}
-            {lease.status === "ACTIVE" && (
-              <button
-                onClick={() => setEndingOpen(true)}
-                className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
-              >
-                End lease
-              </button>
-            )}
-          </div>
-        )}
       </div>
 
       {error && (
@@ -138,26 +110,46 @@ export function LeaseDetailPage() {
       )}
 
       {loading && !lease ? (
-        <div className="text-sm text-gray-500">Loading…</div>
+        <div className="text-sm text-ink-soft">Loading…</div>
       ) : lease ? (
         <>
-          <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
-            <div className="flex items-start justify-between">
-              <div>
-                <h2 className="text-2xl font-semibold text-gray-900">Lease #{lease.id}</h2>
-                <p className="text-sm text-gray-500 mt-1">
-                  Created {new Date(lease.createdAt).toLocaleDateString()}
-                </p>
+          <PageHeader
+            eyebrow="Lease"
+            title={`Lease #${lease.id}`}
+            subtitle={`Created ${new Date(lease.createdAt).toLocaleDateString()}`}
+            actions={
+              <div className="flex items-center gap-2">
+                <LeaseStatusBadge status={lease.status} />
+                {lease.status === "DRAFT" && (
+                  <>
+                    <button
+                      onClick={onActivate}
+                      disabled={activating}
+                      className="px-3 py-1.5 text-sm rounded-md bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-60"
+                    >
+                      {activating ? "Activating…" : "Activate"}
+                    </button>
+                    <button onClick={() => setDeletingOpen(true)} className="btn-danger">
+                      Delete draft
+                    </button>
+                  </>
+                )}
+                {lease.status === "ACTIVE" && (
+                  <button onClick={() => setEndingOpen(true)} className="btn-ghost">
+                    End lease
+                  </button>
+                )}
               </div>
-              <LeaseStatusBadge status={lease.status} />
-            </div>
+            }
+          />
 
-            <dl className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+          <div className="bg-white rounded-lg border border-gray-200 p-5">
+            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
               <Row label="Tenant">
                 {lease.tenant ? (
                   <Link
                     to={`/admin/tenants/${lease.tenantId}`}
-                    className="text-slate-900 hover:underline"
+                    className="text-ink hover:text-brand-600 hover:underline"
                   >
                     {lease.tenant.user.fullName}
                   </Link>
@@ -170,7 +162,7 @@ export function LeaseDetailPage() {
                 {lease.unit?.property ? (
                   <Link
                     to={`/admin/properties/${lease.unit.propertyId}`}
-                    className="text-slate-900 hover:underline"
+                    className="text-ink hover:text-brand-600 hover:underline"
                   >
                     {lease.unit.property.name}
                   </Link>
@@ -195,7 +187,7 @@ export function LeaseDetailPage() {
           </div>
         </>
       ) : (
-        <div className="text-sm text-gray-500">Lease not found.</div>
+        <div className="text-sm text-ink-soft">Lease not found.</div>
       )}
 
       <ConfirmDialog
@@ -223,7 +215,7 @@ export function LeaseDetailPage() {
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <>
-      <dt className="text-gray-500">{label}</dt>
+      <dt className="text-ink-soft">{label}</dt>
       <dd className="text-gray-900">{children}</dd>
     </>
   );

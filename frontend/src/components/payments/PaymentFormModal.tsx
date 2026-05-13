@@ -124,7 +124,7 @@ export function PaymentFormModal({
             type="button"
             onClick={onClose}
             disabled={submitting}
-            className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
+            className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-ink-muted hover:bg-gray-100"
           >
             Cancel
           </button>
@@ -132,7 +132,7 @@ export function PaymentFormModal({
             type="submit"
             form="payment-form"
             disabled={submitting || !form.leaseId}
-            className="px-3 py-1.5 text-sm rounded-md bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-60"
+            className="px-3 py-1.5 text-sm rounded-md bg-brand-500 text-white hover:bg-brand-600 disabled:opacity-60"
           >
             {submitting ? "Saving…" : "Record payment"}
           </button>
@@ -142,7 +142,7 @@ export function PaymentFormModal({
       <form id="payment-form" onSubmit={onSubmit} className="space-y-4">
         {!lockedLeaseId && (
           <div>
-            <label className="block text-sm font-medium text-gray-700">Lease</label>
+            <label className="block text-sm font-medium text-ink-muted">Lease</label>
             <select
               value={form.leaseId}
               onChange={(e) =>
@@ -152,7 +152,7 @@ export function PaymentFormModal({
                 })
               }
               disabled={loading}
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
             >
               <option value="">
                 {loading
@@ -173,7 +173,7 @@ export function PaymentFormModal({
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Amount</label>
+            <label className="block text-sm font-medium text-ink-muted">Amount</label>
             <input
               type="number"
               step="0.01"
@@ -181,17 +181,17 @@ export function PaymentFormModal({
               value={form.amount}
               onChange={(e) => setForm({ ...form, amount: e.target.value })}
               required
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Method</label>
+            <label className="block text-sm font-medium text-ink-muted">Method</label>
             <select
               value={form.method}
               onChange={(e) =>
                 setForm({ ...form, method: e.target.value as PaymentMethod })
               }
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
             >
               <option value="CASH">Cash</option>
               <option value="BANK">Bank</option>
@@ -202,33 +202,33 @@ export function PaymentFormModal({
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Paid on</label>
+            <label className="block text-sm font-medium text-ink-muted">Paid on</label>
             <input
               type="date"
               value={form.paidAt}
               onChange={(e) => setForm({ ...form, paidAt: e.target.value })}
               required
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Reference</label>
+            <label className="block text-sm font-medium text-ink-muted">Reference</label>
             <input
               value={form.reference}
               onChange={(e) => setForm({ ...form, reference: e.target.value })}
               placeholder="Txn ID, M-Pesa code…"
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Note</label>
+          <label className="block text-sm font-medium text-ink-muted">Note</label>
           <textarea
             value={form.note}
             onChange={(e) => setForm({ ...form, note: e.target.value })}
             rows={2}
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
           />
         </div>
 

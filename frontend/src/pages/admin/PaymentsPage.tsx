@@ -6,6 +6,7 @@ import type { MonthlySummary, Payment, PaymentMethod } from "../../lib/types";
 import { PaymentFormModal } from "../../components/payments/PaymentFormModal";
 import { PaymentMethodBadge } from "../../components/payments/PaymentMethodBadge";
 import { ConfirmDialog } from "../../components/ui/ConfirmDialog";
+import { PageHeader } from "../../components/ui/PageHeader";
 
 const METHODS: { value: PaymentMethod | "ALL"; label: string }[] = [
   { value: "ALL", label: "All" },
@@ -107,20 +108,19 @@ export function PaymentsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-semibold text-gray-900">Payments</h2>
-          <p className="text-sm text-gray-500 mt-1">
-            Record and track rent payments across all leases.
-          </p>
-        </div>
-        <button
-          onClick={() => setFormOpen(true)}
-          className="px-3 py-2 text-sm font-medium rounded-md bg-slate-900 text-white hover:bg-slate-800"
-        >
-          + Record payment
-        </button>
-      </div>
+      <PageHeader
+        eyebrow="Finance"
+        title="Payments"
+        subtitle="Record and track rent payments across all leases."
+        actions={
+          <button
+            onClick={() => setFormOpen(true)}
+            className="btn-primary"
+          >
+            + Record payment
+          </button>
+        }
+      />
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card label="This month">{fmtMoney(mtdTotal)}</Card>
@@ -130,12 +130,12 @@ export function PaymentsPage() {
         </Card>
       </div>
 
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <div className="px-4 py-3 border-b border-gray-200">
-          <h3 className="text-sm font-semibold text-gray-700">Monthly summary</h3>
+          <h3 className="text-sm font-semibold text-ink-muted">Monthly summary</h3>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200 text-sm">
+          <table className="min-w-full divide-y divide-gray-100 text-sm">
             <thead className="bg-gray-50">
               <tr>
                 <Th>Month</Th>
@@ -150,19 +150,19 @@ export function PaymentsPage() {
               {summary.map((s) => (
                 <tr key={s.month} className="hover:bg-gray-50">
                   <td className="px-4 py-2 font-medium text-gray-900">{fmtMonth(s.month)}</td>
-                  <td className="px-4 py-2 text-right text-gray-700">
+                  <td className="px-4 py-2 text-right text-ink-muted">
                     {fmtMoney(s.byMethod.CASH)}
                   </td>
-                  <td className="px-4 py-2 text-right text-gray-700">
+                  <td className="px-4 py-2 text-right text-ink-muted">
                     {fmtMoney(s.byMethod.BANK)}
                   </td>
-                  <td className="px-4 py-2 text-right text-gray-700">
+                  <td className="px-4 py-2 text-right text-ink-muted">
                     {fmtMoney(s.byMethod.MPESA)}
                   </td>
                   <td className="px-4 py-2 text-right font-semibold text-gray-900">
                     {fmtMoney(s.total)}
                   </td>
-                  <td className="px-4 py-2 text-right text-gray-500">{s.count}</td>
+                  <td className="px-4 py-2 text-right text-ink-soft">{s.count}</td>
                 </tr>
               ))}
             </tbody>
@@ -177,7 +177,7 @@ export function PaymentsPage() {
               key={m.value}
               onClick={() => setMethod(m.value)}
               className={`px-3 py-1 rounded ${
-                method === m.value ? "bg-slate-900 text-white" : "text-gray-700 hover:bg-gray-100"
+                method === m.value ? "bg-ink text-white" : "text-ink-muted hover:bg-gray-100"
               }`}
             >
               {m.label}
@@ -185,21 +185,21 @@ export function PaymentsPage() {
           ))}
         </div>
         <div>
-          <label className="block text-xs text-gray-500">From</label>
+          <label className="block text-xs text-ink-soft">From</label>
           <input
             type="date"
             value={from}
             onChange={(e) => setFrom(e.target.value)}
-            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
           />
         </div>
         <div>
-          <label className="block text-xs text-gray-500">To</label>
+          <label className="block text-xs text-ink-soft">To</label>
           <input
             type="date"
             value={to}
             onChange={(e) => setTo(e.target.value)}
-            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
           />
         </div>
         {(from || to || method !== "ALL") && (
@@ -209,7 +209,7 @@ export function PaymentsPage() {
               setFrom("");
               setTo("");
             }}
-            className="text-sm text-slate-600 hover:underline"
+            className="text-sm text-ink-muted hover:text-brand-600 hover:underline"
           >
             Clear filters
           </button>
@@ -222,8 +222,8 @@ export function PaymentsPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
+      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-100 text-sm">
           <thead className="bg-gray-50">
             <tr>
               <Th>Paid on</Th>
@@ -238,14 +238,14 @@ export function PaymentsPage() {
           <tbody className="divide-y divide-gray-100 bg-white">
             {loading && (
               <tr>
-                <td colSpan={7} className="px-4 py-6 text-gray-500 text-center">
+                <td colSpan={7} className="px-4 py-6 text-ink-soft text-center">
                   Loading…
                 </td>
               </tr>
             )}
             {!loading && payments.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-6 text-gray-500 text-center">
+                <td colSpan={7} className="px-4 py-6 text-ink-soft text-center">
                   No payments found.
                 </td>
               </tr>
@@ -253,14 +253,14 @@ export function PaymentsPage() {
             {!loading &&
               payments.map((p) => (
                 <tr key={p.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2 text-gray-700">
+                  <td className="px-4 py-2 text-ink-muted">
                     {new Date(p.paidAt).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-2">
                     {p.lease?.tenant ? (
                       <Link
                         to={`/admin/tenants/${p.lease.tenantId}`}
-                        className="font-medium text-slate-900 hover:underline"
+                        className="font-medium text-ink hover:text-brand-600"
                       >
                         {p.lease.tenant.user.fullName}
                       </Link>
@@ -268,13 +268,13 @@ export function PaymentsPage() {
                       `Lease #${p.leaseId}`
                     )}
                   </td>
-                  <td className="px-4 py-2 text-gray-700">
+                  <td className="px-4 py-2 text-ink-muted">
                     {p.lease?.unit?.property?.name ?? "—"} · {p.lease?.unit?.label ?? "—"}
                   </td>
                   <td className="px-4 py-2">
                     <PaymentMethodBadge method={p.method} />
                   </td>
-                  <td className="px-4 py-2 text-gray-700">{p.reference ?? "—"}</td>
+                  <td className="px-4 py-2 text-ink-muted">{p.reference ?? "—"}</td>
                   <td className="px-4 py-2 text-right font-semibold text-gray-900">
                     {fmtMoney(p.amount)}
                   </td>
@@ -322,8 +322,8 @@ export function PaymentsPage() {
 function Card({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
-      <div className="text-xs uppercase tracking-wide text-gray-500">{label}</div>
-      <div className="text-2xl font-semibold text-gray-900 mt-2">{children}</div>
+      <div className="text-xs uppercase tracking-wide text-ink-soft">{label}</div>
+      <div className="text-[32px] font-semibold text-ink tracking-tightish leading-none mt-2">{children}</div>
     </div>
   );
 }
@@ -331,7 +331,7 @@ function Card({ label, children }: { label: string; children: React.ReactNode })
 function Th({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wide text-left ${className}`}
+      className={`px-4 py-2 text-[11px] font-semibold text-ink-soft uppercase tracking-wider text-left ${className}`}
     >
       {children}
     </th>

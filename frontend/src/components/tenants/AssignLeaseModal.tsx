@@ -93,7 +93,7 @@ export function AssignLeaseModal({ open, tenantId, onClose, onAssigned }: Props)
             type="button"
             onClick={onClose}
             disabled={submitting}
-            className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
+            className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-ink-muted hover:bg-gray-100"
           >
             Cancel
           </button>
@@ -101,7 +101,7 @@ export function AssignLeaseModal({ open, tenantId, onClose, onAssigned }: Props)
             type="submit"
             form="assign-lease-form"
             disabled={submitting || !selectedUnitId}
-            className="px-3 py-1.5 text-sm rounded-md bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-60"
+            className="px-3 py-1.5 text-sm rounded-md bg-brand-500 text-white hover:bg-brand-600 disabled:opacity-60"
           >
             {submitting ? "Assigning…" : "Assign"}
           </button>
@@ -110,14 +110,14 @@ export function AssignLeaseModal({ open, tenantId, onClose, onAssigned }: Props)
     >
       <form id="assign-lease-form" onSubmit={onSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Available units</label>
+          <label className="block text-sm font-medium text-ink-muted">Available units</label>
           <select
             value={selectedUnitId}
             onChange={(e) =>
               setSelectedUnitId(e.target.value === "" ? "" : Number(e.target.value))
             }
             disabled={loading}
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
           >
             <option value="">
               {loading ? "Loading…" : options.length === 0 ? "No available units" : "Select a unit…"}
@@ -128,7 +128,7 @@ export function AssignLeaseModal({ open, tenantId, onClose, onAssigned }: Props)
               </option>
             ))}
           </select>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-ink-soft mt-1">
             Monthly rent will be captured from the unit at assignment time.
           </p>
         </div>
