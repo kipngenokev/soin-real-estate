@@ -23,3 +23,36 @@ export type Unit = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type TenantUser = {
+  id: number;
+  email: string;
+  fullName: string;
+  role: "ADMIN" | "TENANT";
+  isActive: boolean;
+  createdAt: string;
+};
+
+export type LeaseWithUnit = {
+  id: number;
+  tenantId: number;
+  unitId: number;
+  startDate: string;
+  endDate: string | null;
+  monthlyRent: string;
+  createdAt: string;
+  updatedAt: string;
+  unit?: Unit & { property?: Property };
+};
+
+export type Tenant = {
+  id: number;
+  userId: number;
+  phone: string | null;
+  nationalId: string | null;
+  emergencyContact: string | null;
+  createdAt: string;
+  updatedAt: string;
+  user: TenantUser;
+  leases: LeaseWithUnit[]; // active lease only (length 0 or 1) from backend
+};
