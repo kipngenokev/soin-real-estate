@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 import { env } from "./config/env";
 import routes from "./routes";
 import { notFound } from "./middlewares/notFound";
@@ -10,9 +11,15 @@ import { errorHandler } from "./middlewares/errorHandler";
 const app = express();
 
 app.use(helmet());
-app.use(cors({ origin: env.corsOrigin, credentials: true }));
+app.use(
+  cors({
+    origin: env.corsOrigin,
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 if (env.nodeEnv !== "test") {
   app.use(morgan("dev"));

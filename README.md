@@ -33,20 +33,22 @@ No microservices, no queues, no Redis, no event bus. MVP-simple by design.
 ### 1. Database
 
 ```bash
-mysql -u root -p -e "CREATE DATABASE soinsync;"
+mysql -u root -p -e "CREATE DATABASE soinsyncreale;"
 ```
 
 ### 2. Backend
 
 ```bash
 cd backend
-cp .env.example .env        # then edit DATABASE_URL to match your MySQL
+cp .env.example .env          # edit DATABASE_URL + JWT secrets to your values
 npm install
-npx prisma migrate dev --name init
-npm run dev
+npm run prisma:migrate -- --name auth_init   # creates users table
+npm run prisma:seed                          # creates the initial admin user
+npm run dev                                  # http://localhost:4000
 ```
 
-Server runs at `http://localhost:4000`.
+The seed creates an admin from `ADMIN_EMAIL` / `ADMIN_PASSWORD` in `.env`.
+Default: `admin@soinsync.local` / `ChangeMe!123` (change for production).
 
 Smoke test:
 
@@ -61,10 +63,32 @@ curl http://localhost:4000/api/v1/health
 cd frontend
 cp .env.example .env
 npm install
-npm run dev
+npm run dev                  # http://localhost:5173
 ```
 
-App runs at `http://localhost:5173`.
+Open `http://localhost:5173`, sign in with the seeded admin. You will be
+redirected to `/admin`. Tenant users (created by an admin) land on `/portal`.
+
+## Auth model
+
+- **Roles** — `ADMIN`, `TENANT`
+- **Tokens** — short-lived access JWT (15m) + longer refresh JWT (7d), both
+  delivered as `httpOnly` cookies (`SameSite=Lax`, `Secure` in production)
+- **Refresh flow** — axios interceptor calls `POST /auth/refresh` on a 401 and
+  retries the original request once. On refresh failure the client clears
+  state and the user is redirected to `/login`.
+- **Registration** — public sign-up is disabled. Only an authenticated admin
+  may call `POST /auth/register` to create users.
+
+### Endpoints
+
+| Method | Path                  | Auth         | Purpose                  |
+|--------|-----------------------|--------------|--------------------------|
+| POST   | `/api/v1/auth/login`  | public       | Sign in, set cookies     |
+| POST   | `/api/v1/auth/refresh`| refresh cookie | Rotate tokens          |
+| POST   | `/api/v1/auth/logout` | public       | Clear auth cookies       |
+| GET    | `/api/v1/auth/me`     | access token | Current user             |
+| POST   | `/api/v1/auth/register` | ADMIN only | Create a new user        |
 
 ## API response shape
 
@@ -76,5 +100,5 @@ Every backend response (success or error) follows:
 
 ## Status
 
-Phase 0 — foundation scaffold. No business logic yet. Auth, domain models, and
-reports land in subsequent phases.
+Phase 1 — authentication complete. Phase 2 will introduce domain models
+(properties, units, tenants, leases, payments, maintenance).

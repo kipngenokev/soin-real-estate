@@ -1,10 +1,14 @@
-export function Dashboard() {
+import { useAuth } from "../context/AuthContext";
+
+export function AdminDashboard() {
+  const { user } = useAuth();
+
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold text-gray-900">Dashboard</h2>
+        <h2 className="text-2xl font-semibold text-gray-900">Admin Dashboard</h2>
         <p className="text-sm text-gray-500 mt-1">
-          Foundation scaffold is running. Feature modules will land here in upcoming phases.
+          Welcome, {user?.fullName}. Manage properties, tenants and payments.
         </p>
       </div>
 
@@ -19,12 +23,8 @@ export function Dashboard() {
             key={card.label}
             className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm"
           >
-            <div className="text-xs uppercase tracking-wide text-gray-500">
-              {card.label}
-            </div>
-            <div className="text-2xl font-semibold text-gray-900 mt-2">
-              {card.value}
-            </div>
+            <div className="text-xs uppercase tracking-wide text-gray-500">{card.label}</div>
+            <div className="text-2xl font-semibold text-gray-900 mt-2">{card.value}</div>
           </div>
         ))}
       </div>

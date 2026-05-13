@@ -7,9 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model AppMeta {
-  id        Int      @id @default(autoincrement())
-  key       String   @unique
-  value     String?
-  createdAt DateTime @default(now())
+enum Role {
+  ADMIN
+  TENANT
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  fullName     String
+  role         Role     @default(TENANT)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([role])
 }

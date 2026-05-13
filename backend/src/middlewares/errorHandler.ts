@@ -8,10 +8,13 @@ export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
     return;
   }
 
-  const message = err instanceof Error ? err.message : "Internal Server Error";
   if (process.env.NODE_ENV !== "production") {
     // eslint-disable-next-line no-console
     console.error("[errorHandler]", err);
+    const message = err instanceof Error ? err.message : "Internal Server Error";
+    res.status(500).json(ApiResponse.error(message));
+    return;
   }
-  res.status(500).json(ApiResponse.error(message));
+
+  res.status(500).json(ApiResponse.error("Internal Server Error"));
 };
