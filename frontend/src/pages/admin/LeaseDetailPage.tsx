@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { AxiosError } from "axios";
 import { leasesApi } from "../../lib/api/leases";
 import type { LeaseDetail } from "../../lib/types";
@@ -9,16 +9,12 @@ import { ConfirmDialog } from "../../components/ui/ConfirmDialog";
 export function LeaseDetailPage() {
   const { id } = useParams<{ id: string }>();
   const leaseId = Number(id);
-  const navigate = useNavigate();
 
   const [lease, setLease] = useState<LeaseDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activating, setActivating] = useState(false);
   const [endingOpen, setEndingOpen] = useState(false);
   const [endingBusy, setEndingBusy] = useState(false);
-  const [deletingOpen, setDeletingOpen] = useState(false);
-  const [deletingBusy, setDeletingBusy] = useState(false);
 
   const reload = useCallback(async () => {
     setLoading(true);
@@ -40,23 +36,6 @@ export function LeaseDetailPage() {
     if (Number.isFinite(leaseId) && leaseId > 0) reload();
   }, [leaseId, reload]);
 
-  async function onActivate() {
-    setActivating(true);
-    setError(null);
-    try {
-      const updated = await leasesApi.activate(leaseId);
-      setLease(updated);
-    } catch (err) {
-      setError(
-        err instanceof AxiosError
-          ? (err.response?.data?.message ?? "Failed to activate lease")
-          : "Failed to activate lease"
-      );
-    } finally {
-      setActivating(false);
-    }
-  }
-
   async function onEnd() {
     setEndingBusy(true);
     setError(null);
@@ -75,21 +54,6 @@ export function LeaseDetailPage() {
     }
   }
 
-  async function onDelete() {
-    setDeletingBusy(true);
-    try {
-      await leasesApi.remove(leaseId);
-      navigate("/admin/leases", { replace: true });
-    } catch (err) {
-      setError(
-        err instanceof AxiosError
-          ? (err.response?.data?.message ?? "Failed to delete lease")
-          : "Failed to delete lease"
-      );
-      setDeletingBusy(false);
-    }
-  }
-
   if (!Number.isFinite(leaseId) || leaseId <= 0) {
     return <div className="text-sm text-red-600">Invalid lease id.</div>;
   }
@@ -100,34 +64,13 @@ export function LeaseDetailPage() {
         <Link to="/admin/leases" className="text-sm text-slate-600 hover:underline">
           ← Back to leases
         </Link>
-        {lease && (
-          <div className="space-x-2">
-            {lease.status === "DRAFT" && (
-              <>
-                <button
-                  onClick={onActivate}
-                  disabled={activating}
-                  className="px-3 py-1.5 text-sm rounded-md bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-60"
-                >
-                  {activating ? "Activating…" : "Activate"}
-                </button>
-                <button
-                  onClick={() => setDeletingOpen(true)}
-                  className="px-3 py-1.5 text-sm rounded-md border border-red-300 text-red-700 hover:bg-red-50"
-                >
-                  Delete draft
-                </button>
-              </>
-            )}
-            {lease.status === "ACTIVE" && (
-              <button
-                onClick={() => setEndingOpen(true)}
-                className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
-              >
-                End lease
-              </button>
-            )}
-          </div>
+        {lease && lease.status === "ACTIVE" && (
+          <button
+            onClick={() => setEndingOpen(true)}
+            className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
+          >
+            End lease
+          </button>
         )}
       </div>
 
@@ -206,15 +149,6 @@ export function LeaseDetailPage() {
         onCancel={() => setEndingOpen(false)}
         onConfirm={onEnd}
         busy={endingBusy}
-      />
-
-      <ConfirmDialog
-        open={deletingOpen}
-        title="Delete draft lease"
-        message="Delete this draft lease? This cannot be undone."
-        onCancel={() => setDeletingOpen(false)}
-        onConfirm={onDelete}
-        busy={deletingBusy}
       />
     </div>
   );

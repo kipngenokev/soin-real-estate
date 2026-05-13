@@ -3,22 +3,19 @@ import { Link } from "react-router-dom";
 import { AxiosError } from "axios";
 import { leasesApi } from "../../lib/api/leases";
 import type { LeaseDetail, LeaseStatus } from "../../lib/types";
-import { LeaseFormModal } from "../../components/leases/LeaseFormModal";
 import { LeaseStatusBadge } from "../../components/leases/LeaseStatusBadge";
 
 const FILTERS: { value: LeaseStatus | "ALL"; label: string }[] = [
-  { value: "ALL", label: "All" },
-  { value: "DRAFT", label: "Draft" },
   { value: "ACTIVE", label: "Active" },
   { value: "ENDED", label: "Ended" },
+  { value: "ALL", label: "All" },
 ];
 
 export function LeasesPage() {
   const [items, setItems] = useState<LeaseDetail[]>([]);
-  const [filter, setFilter] = useState<LeaseStatus | "ALL">("ALL");
+  const [filter, setFilter] = useState<LeaseStatus | "ALL">("ACTIVE");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [formOpen, setFormOpen] = useState(false);
 
   const reload = useCallback(async (status: LeaseStatus | "ALL") => {
     setLoading(true);
@@ -41,25 +38,13 @@ export function LeasesPage() {
     reload(filter);
   }, [filter, reload]);
 
-  function onCreated(lease: LeaseDetail) {
-    setItems((prev) => [lease, ...prev]);
-  }
-
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-semibold text-gray-900">Leases</h2>
-          <p className="text-sm text-gray-500 mt-1">
-            Track lease lifecycle: create, activate, end.
-          </p>
-        </div>
-        <button
-          onClick={() => setFormOpen(true)}
-          className="px-3 py-2 text-sm font-medium rounded-md bg-slate-900 text-white hover:bg-slate-800"
-        >
-          + New lease
-        </button>
+      <div>
+        <h2 className="text-2xl font-semibold text-gray-900">Leases</h2>
+        <p className="text-sm text-gray-500 mt-1">
+          Leases are created automatically when a tenant is assigned to a unit.
+        </p>
       </div>
 
       <div className="inline-flex rounded-md border border-gray-300 bg-white p-0.5 text-sm">
@@ -155,11 +140,6 @@ export function LeasesPage() {
         </table>
       </div>
 
-      <LeaseFormModal
-        open={formOpen}
-        onClose={() => setFormOpen(false)}
-        onCreated={onCreated}
-      />
     </div>
   );
 }

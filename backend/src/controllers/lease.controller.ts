@@ -31,28 +31,9 @@ export const leaseController = {
     res.status(200).json(ApiResponse.success(item));
   },
 
-  async create(req: Request, res: Response) {
-    const tenantId = Number(req.body?.tenantId);
-    const unitId = Number(req.body?.unitId);
-    const item = await leaseService.create({ tenantId, unitId });
-    res.status(201).json(ApiResponse.success(item, "lease created"));
-  },
-
-  async activate(req: Request, res: Response) {
-    const id = parseId(req.params.id);
-    const item = await leaseService.activate(id);
-    res.status(200).json(ApiResponse.success(item, "lease activated"));
-  },
-
   async end(req: Request, res: Response) {
     const id = parseId(req.params.id);
     const item = await leaseService.end(id);
     res.status(200).json(ApiResponse.success(item, "lease ended"));
-  },
-
-  async remove(req: Request, res: Response) {
-    const id = parseId(req.params.id);
-    await leaseService.delete(id);
-    res.status(200).json(ApiResponse.success(null, "lease deleted"));
   },
 };

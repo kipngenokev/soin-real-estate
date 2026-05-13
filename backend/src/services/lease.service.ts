@@ -53,74 +53,6 @@ export const leaseService = {
     return lease;
   },
 
-  async create(input: { tenantId: number; unitId: number }) {
-    if (!Number.isInteger(input.tenantId) || input.tenantId <= 0) {
-      throw new AppError("tenantId is required", 400);
-    }
-    if (!Number.isInteger(input.unitId) || input.unitId <= 0) {
-      throw new AppError("unitId is required", 400);
-    }
-
-    return prisma.$transaction(async (tx) => {
-      const tenant = await tx.tenant.findUnique({ where: { id: input.tenantId } });
-      if (!tenant) throw new AppError("tenant not found", 404);
-
-      const unit = await tx.unit.findUnique({ where: { id: input.unitId } });
-      if (!unit) throw new AppError("unit not found", 404);
-
-      await assertNoBlockingLease(tx, { tenantId: input.tenantId, unitId: input.unitId });
-
-      return tx.lease.create({
-        data: {
-          tenantId: input.tenantId,
-          unitId: input.unitId,
-          monthlyRent: unit.rentAmount,
-          status: LeaseStatus.DRAFT,
-        },
-        include: leaseDetailInclude,
-      });
-    });
-  },
-
-  async activate(id: number) {
-    return prisma.$transaction(async (tx) => {
-      const lease = await tx.lease.findUnique({ where: { id } });
-      if (!lease) throw new AppError("lease not found", 404);
-      if (lease.status === LeaseStatus.ACTIVE) {
-        throw new AppError("lease is already active", 409);
-      }
-      if (lease.status === LeaseStatus.ENDED) {
-        throw new AppError("ended leases cannot be reactivated", 409);
-      }
-
-      // Re-check the unit hasn't been taken since this draft was made.
-      const conflictingActive = await tx.lease.findFirst({
-        where: {
-          unitId: lease.unitId,
-          status: LeaseStatus.ACTIVE,
-          NOT: { id: lease.id },
-        },
-      });
-      if (conflictingActive) {
-        throw new AppError("unit already has an active lease", 409);
-      }
-      await assertUnitActivatable(tx, lease.unitId);
-
-      const activated = await tx.lease.update({
-        where: { id: lease.id },
-        data: { status: LeaseStatus.ACTIVE, startDate: new Date() },
-        include: leaseDetailInclude,
-      });
-
-      await tx.unit.update({
-        where: { id: lease.unitId },
-        data: { status: UnitStatus.OCCUPIED },
-      });
-
-      return activated;
-    });
-  },
-
   async end(id: number) {
     return prisma.$transaction(async (tx) => {
       const lease = await tx.lease.findUnique({ where: { id } });
@@ -146,14 +78,6 @@ export const leaseService = {
 
       return ended;
     });
-  },
-
-  async delete(id: number) {
-    const lease = await this.get(id);
-    if (lease.status !== LeaseStatus.DRAFT) {
-      throw new AppError("only DRAFT leases can be deleted", 409);
-    }
-    await prisma.lease.delete({ where: { id } });
   },
 
   // Shortcut used by tenant-detail "assign to unit": create + activate atomically.
