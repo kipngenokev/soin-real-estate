@@ -24,7 +24,8 @@ export const tenantController = {
   },
 
   async create(req: Request, res: Response) {
-    const { email, fullName, password, phone, nationalId, emergencyContact } = req.body ?? {};
+    const { email, fullName, password, phone, nationalId, emergencyContact, unitId } =
+      req.body ?? {};
     const item = await tenantService.create({
       email,
       fullName,
@@ -32,6 +33,7 @@ export const tenantController = {
       phone,
       nationalId,
       emergencyContact,
+      unitId,
     });
     res.status(201).json(ApiResponse.success(item, "tenant created"));
   },

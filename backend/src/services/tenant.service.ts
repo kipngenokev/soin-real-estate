@@ -11,6 +11,7 @@ export type CreateTenantInput = {
   phone?: string | null;
   nationalId?: string | null;
   emergencyContact?: string | null;
+  unitId?: number | null;
 };
 
 export type UpdateTenantInput = {
@@ -62,6 +63,12 @@ export const tenantService = {
       if (dup) throw new AppError("nationalId is already in use", 409);
     }
 
+    const unitId =
+      input.unitId === undefined || input.unitId === null ? null : Number(input.unitId);
+    if (unitId !== null && (!Number.isInteger(unitId) || unitId <= 0)) {
+      throw new AppError("invalid unitId", 400);
+    }
+
     const passwordHash = await password.hash(input.password);
 
     const tenant = await prisma.$transaction(async (tx) => {
@@ -73,7 +80,7 @@ export const tenantService = {
           role: Role.TENANT,
         },
       });
-      return tx.tenant.create({
+      const created = await tx.tenant.create({
         data: {
           userId: user.id,
           phone: emptyToNull(input.phone),
@@ -81,6 +88,29 @@ export const tenantService = {
           emergencyContact: emptyToNull(input.emergencyContact),
         },
       });
+
+      if (unitId !== null) {
+        const unit = await tx.unit.findUnique({ where: { id: unitId } });
+        if (!unit) throw new AppError("unit not found", 404);
+        if (unit.status !== UnitStatus.AVAILABLE) {
+          throw new AppError("unit is not available", 409);
+        }
+        await tx.lease.create({
+          data: {
+            tenantId: created.id,
+            unitId: unit.id,
+            monthlyRent: unit.rentAmount,
+            status: LeaseStatus.ACTIVE,
+            startDate: new Date(),
+          },
+        });
+        await tx.unit.update({
+          where: { id: unit.id },
+          data: { status: UnitStatus.OCCUPIED },
+        });
+      }
+
+      return created;
     });
 
     return this.get(tenant.id);

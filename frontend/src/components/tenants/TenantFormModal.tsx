@@ -2,7 +2,8 @@ import { useEffect, useState, type FormEvent } from "react";
 import { AxiosError } from "axios";
 import { Modal } from "../ui/Modal";
 import { tenantsApi, type CreateTenantInput, type UpdateTenantInput } from "../../lib/api/tenants";
-import type { Tenant } from "../../lib/types";
+import { unitsApi } from "../../lib/api/units";
+import type { Tenant, UnitWithProperty } from "../../lib/types";
 
 type Props = {
   open: boolean;
@@ -18,6 +19,7 @@ type FormState = {
   phone: string;
   nationalId: string;
   emergencyContact: string;
+  unitId: number | "";
 };
 
 const empty: FormState = {
@@ -27,30 +29,52 @@ const empty: FormState = {
   phone: "",
   nationalId: "",
   emergencyContact: "",
+  unitId: "",
 };
+
+function fmtMoney(v: string | number) {
+  return Number(v).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
 
 export function TenantFormModal({ open, initial, onClose, onSaved }: Props) {
   const [form, setForm] = useState<FormState>(empty);
+  const [units, setUnits] = useState<UnitWithProperty[]>([]);
+  const [unitsLoading, setUnitsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const isEdit = Boolean(initial);
 
   useEffect(() => {
-    if (open) {
-      setForm(
-        initial
-          ? {
-              email: initial.user.email,
-              fullName: initial.user.fullName,
-              password: "",
-              phone: initial.phone ?? "",
-              nationalId: initial.nationalId ?? "",
-              emergencyContact: initial.emergencyContact ?? "",
-            }
-          : empty
-      );
-      setError(null);
+    if (!open) return;
+    setForm(
+      initial
+        ? {
+            email: initial.user.email,
+            fullName: initial.user.fullName,
+            password: "",
+            phone: initial.phone ?? "",
+            nationalId: initial.nationalId ?? "",
+            emergencyContact: initial.emergencyContact ?? "",
+            unitId: "",
+          }
+        : empty
+    );
+    setError(null);
+
+    // Only fetch units when onboarding a new tenant.
+    if (!initial) {
+      setUnitsLoading(true);
+      unitsApi
+        .listAll({ status: "AVAILABLE" })
+        .then(setUnits)
+        .catch(() => setUnits([]))
+        .finally(() => setUnitsLoading(false));
+    } else {
+      setUnits([]);
     }
   }, [open, initial]);
 
@@ -76,6 +100,7 @@ export function TenantFormModal({ open, initial, onClose, onSaved }: Props) {
           phone: form.phone.trim() || null,
           nationalId: form.nationalId.trim() || null,
           emergencyContact: form.emergencyContact.trim() || null,
+          unitId: form.unitId === "" ? null : Number(form.unitId),
         };
         saved = await tenantsApi.create(payload);
       }
@@ -92,11 +117,17 @@ export function TenantFormModal({ open, initial, onClose, onSaved }: Props) {
     }
   }
 
+  const buttonLabel = (() => {
+    if (submitting) return "Saving…";
+    if (isEdit) return "Save changes";
+    return form.unitId !== "" ? "Onboard tenant & assign unit" : "Onboard tenant";
+  })();
+
   return (
     <Modal
       open={open}
       onClose={onClose}
-      title={isEdit ? "Edit tenant" : "New tenant"}
+      title={isEdit ? "Edit tenant" : "Onboard tenant"}
       size="lg"
       footer={
         <>
@@ -114,7 +145,7 @@ export function TenantFormModal({ open, initial, onClose, onSaved }: Props) {
             disabled={submitting}
             className="px-3 py-1.5 text-sm rounded-md bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-60"
           >
-            {submitting ? "Saving…" : isEdit ? "Save changes" : "Create tenant"}
+            {buttonLabel}
           </button>
         </>
       }
@@ -183,6 +214,47 @@ export function TenantFormModal({ open, initial, onClose, onSaved }: Props) {
             className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
           />
         </Field>
+
+        {!isEdit && (
+          <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
+            <div className="flex items-baseline justify-between">
+              <h4 className="text-sm font-semibold text-gray-900">Unit assignment</h4>
+              <span className="text-xs text-gray-500">Optional</span>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">
+              Pick a unit to assign now — a lease will be created and activated
+              automatically. Leave blank to assign later from the tenant page.
+            </p>
+
+            <div className="mt-3">
+              <select
+                value={form.unitId}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    unitId: e.target.value === "" ? "" : Number(e.target.value),
+                  })
+                }
+                disabled={unitsLoading}
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500"
+              >
+                <option value="">
+                  {unitsLoading
+                    ? "Loading available units…"
+                    : units.length === 0
+                      ? "No available units — onboard without assignment"
+                      : "Don't assign a unit yet"}
+                </option>
+                {units.map((u) => (
+                  <option key={u.id} value={u.id}>
+                    {u.property?.name ?? `Property #${u.propertyId}`} · {u.label} ·{" "}
+                    {u.type === "STUDIO" ? "Studio" : "One bedroom"} · {fmtMoney(u.rentAmount)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        )}
 
         {error && (
           <div className="rounded-md bg-red-50 border border-red-200 px-3 py-2 text-sm text-red-700">

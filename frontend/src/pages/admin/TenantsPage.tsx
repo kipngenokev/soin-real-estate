@@ -81,7 +81,7 @@ export function TenantsPage() {
           onClick={() => setFormOpen(true)}
           className="px-3 py-2 text-sm font-medium rounded-md bg-slate-900 text-white hover:bg-slate-800"
         >
-          + New tenant
+          + Onboard tenant
         </button>
       </div>
 
@@ -124,7 +124,7 @@ export function TenantsPage() {
                 <td colSpan={5} className="px-4 py-6 text-sm text-gray-500 text-center">
                   {query
                     ? "No tenants match your search."
-                    : "No tenants yet. Click New tenant to add one."}
+                    : "No tenants yet. Click Onboard tenant to add one."}
                 </td>
               </tr>
             )}

@@ -8,6 +8,7 @@ export type CreateTenantInput = {
   phone?: string | null;
   nationalId?: string | null;
   emergencyContact?: string | null;
+  unitId?: number | null;
 };
 
 export type UpdateTenantInput = {
